@@ -30,4 +30,17 @@ The app defines following CRUD APIs.
         PUT /coordinates/{coordId}
         
         DELETE /coordinates/{coordId}
+        
+__Requirements to POST__
 
+The following header must be present:
+
+        Content-Type: application/json
+        
+The data format will look like:
+
+        {
+                "coordinateStart": "start",
+                "coordinateEnd": "end"
+         }
+       
