@@ -24,4 +24,25 @@ function addMarker() {
 
 function setOutput(long,lat) {
     $("#output").html("You have entered : long = " + long + " and lat = " + lat);
+
+    $.get( "http://localhost:8080/coordinates", function( data ) {
+        console.log( data );
+    });
+
+    $.ajax({
+        url:"http://localhost:8080/coordinates",
+        dataType: 'json',
+        type: 'post',
+        contentType: 'application/json;charset=UTF-8',
+        data: '{ "coordinateStart": "csfasgsa", "coordinateEnd": "kasfsa" }' ,
+        processData: false,
+        success: function( data ){
+            console.log( JSON.stringify( data ) );
+        },
+        error: function( jqXhr, textStatus, errorThrown ){
+            console.log( errorThrown );
+        }
+    });
+
+
 }
