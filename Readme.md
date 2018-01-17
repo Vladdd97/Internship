@@ -1,4 +1,4 @@
-##Steps to Setup
+## Steps to Setup
 
 1. Clone the application
 
@@ -17,17 +17,17 @@
 4. Run the app from the EasyCoordinateApplication.java class.   
 
 
-##Explore our REST API
+##  Explore our REST API
 
 The app defines following CRUD APIs.
 
-GET /coordinates
-
-POST /coordinates
-
-GET /coordinates/{coordId}
-
-PUT /coordinates/{coordId}
-
-DELETE /coordinates/{coordId}
+        GET /coordinates
+        
+        POST /coordinates
+        
+        GET /coordinates/{coordId}
+        
+        PUT /coordinates/{coordId}
+        
+        DELETE /coordinates/{coordId}
 
