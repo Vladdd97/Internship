@@ -1,7 +1,7 @@
-package com.example.easynotes.controller;
+package com.example.easycoordinate.controller;
 
-import com.example.easynotes.model.Coordinate;
-import com.example.easynotes.repository.CoordinateRepository;
+import com.example.easycoordinate.model.Coordinate;
+import com.example.easycoordinate.repository.CoordinateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * Created by rajeevkumarsingh on 27/06/17.
- */
+
 @RestController
 @RequestMapping("/")
 public class CoordinateController {

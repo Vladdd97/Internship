@@ -1,12 +1,10 @@
-package com.example.easynotes.model;
+package com.example.easycoordinate.model;
 
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 
-/**
- * Created by rajeevkumarsingh on 27/06/17.
- */
+
 @Entity
 @Table(name = "coordinates")
 public class Coordinate {

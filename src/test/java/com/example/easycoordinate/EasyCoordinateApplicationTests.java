@@ -1,4 +1,4 @@
-package com.example.easynotes;
+package com.example.easycoordinate;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class EasyNotesApplicationTests {
+public class EasyCoordinateApplicationTests {
 
 	@Test
 	public void contextLoads() {
