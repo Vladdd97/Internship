@@ -6,42 +6,65 @@ function main() {
     setOutput();
 }
 
+var geocoder;
+var marker;
+var map;
+
 function myMap(long, lat) {
+    geocoder = new google.maps.Geocoder();
     var myCenter = new google.maps.LatLng(long, lat);
     var mapCanvas = document.getElementById("map");
-    var mapOptions = {center: myCenter, zoom: 10};
-    var map = new google.maps.Map(mapCanvas, mapOptions);
-    var marker = new google.maps.Marker({position: myCenter});
+    var mapOptions = {
+        center: myCenter,
+        zoom: 10,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(mapCanvas, mapOptions);
+    marker = new google.maps.Marker({position: myCenter});
     marker.setMap(map);
 
-    google.maps.event.addListener(map, 'click', function(e) {
+    google.maps.event.addListener(map, 'click', function (e) {
         marker.setMap(null);
         marker = new google.maps.Marker({position: e.latLng});
         marker.setMap(map);
         $("#latitude").val(marker.getPosition().lat());
         $("#longitude").val(marker.getPosition().lng());
+        geocodePosition(marker.getPosition())
     });
 
 }
 
-function addMarker() {
-    var lat = parseFloat($("#latitude").val()),
-        long = parseFloat($("#longitude").val());
-        myMap(lat, long);
-        setInput(lat, long);
+function geocodePosition(pos){
+    geocoder.geocode({
+        latLng: pos
+    }, function (responses) {
+        if (responses && responses.length > 0){
+            marker.formatted_address = responses[0].formatted_address;
+        }
+        $("#address").val(marker.formatted_address);
+        $("#longLat").val(marker.getPosition().lat() + ":" + marker.getPosition().lng());
+    })
 }
 
 
-function setInput(lat, long) {
+function addMarker() {
+    var address = $('#address').val(),
+        coordinates = $('#longLat').val().trim().split(':');
+    myMap(coordinates[0], coordinates[1]);
+    setInput(address, coordinates);
+}
+
+
+function setInput(address, coordinates) {
     $.ajax({
         url: "http://localhost:8080/coordinates",
         dataType: 'json',
         type: 'post',
         contentType: 'application/json',
-        data: '{ "coordinateStart":' + lat + ', "coordinateEnd":' + long + '}',
+        data: '{ "coordinateStart":' + '"' + address + '"' + ', "coordinateEnd":' + '"' + coordinates + '"' + '}',
         processData: false,
         success: function () {
-            console.log("Coordinates sent to API \n" + lat + "  " + long);
+            console.log("Coordinates sent to API \n" + address + "  " + coordinates);
             setOutput();
         },
         error: function (jqXhr, textStatus, errorThrown) {
@@ -59,7 +82,7 @@ function setOutput() {
         success: function (data) {
             $("#output").html(null);
             $.each(data, function (index, value) {
-                $('#output').append('<dt id="coords">'  + value.coordinateStart + " : " + value.coordinateEnd);
+                $('#output').append('<dt id="coords">' + value.coordinateStart + " : " + value.coordinateEnd);
             });
         },
         error: function (jqXhr, textStatus, errorThrown) {
@@ -68,10 +91,11 @@ function setOutput() {
         }
     });
 
-    $('#output').on('click', 'dt', function() {
+    $('#output').on('click', 'dt', function () {
         var click_text = $(this).text().split(' : ');
-        $('#selected').html('Selected ' + click_text[0] + " : " + click_text[1]);
-        myMap(click_text[0], click_text[1]);
+        $('#selected').html('<b>Selected: </b>' + click_text[0] + " : " + click_text[1]);
+        var coordinates = click_text[1].trim().split(',');
+        myMap(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
     });
 }
 
