@@ -18,6 +18,8 @@ function myMap(long, lat) {
         marker.setMap(null);
         marker = new google.maps.Marker({position: e.latLng});
         marker.setMap(map);
+        $("#latitude").val(marker.getPosition().lat());
+        $("#longitude").val(marker.getPosition().lng());
     });
 
 }
