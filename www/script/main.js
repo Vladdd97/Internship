@@ -37,13 +37,12 @@ function setInput(lat, long) {
         url: "http://localhost:8080/coordinates",
         dataType: 'json',
         type: 'post',
-        contentType: 'application/json;charset=UTF-8',
+        contentType: 'application/json',
         data: '{ "coordinateStart":' + lat + ', "coordinateEnd":' + long + '}',
         processData: false,
-        success: function (data) {
-            console.log("Input was successfully setted \n" + lat + "  " + long);
-            console.log("\nInput : " + JSON.stringify(data));
-            setOutput(lat, long);
+        success: function () {
+            console.log("Coordinates sent to API \n" + lat + "  " + long);
+            setOutput();
         },
         error: function (jqXhr, textStatus, errorThrown) {
             console.log(errorThrown);
@@ -58,8 +57,9 @@ function setOutput() {
         type: 'GET',
         dataType: 'json',
         success: function (data) {
+            $("#output").html(null);
             $.each(data, function (index, value) {
-                $('#output').append('<dt id="coords">'  + value.coordinateStart + ":" + value.coordinateEnd);
+                $('#output').append('<dt id="coords">'  + value.coordinateStart + " : " + value.coordinateEnd);
             });
         },
         error: function (jqXhr, textStatus, errorThrown) {
@@ -69,12 +69,10 @@ function setOutput() {
     });
 
     $('#output').on('click', 'dt', function() {
-        var click_text = $(this).text().split(':');
+        var click_text = $(this).text().split(' : ');
         $('#selected').html('Selected ' + click_text[0] + " : " + click_text[1]);
         myMap(click_text[0], click_text[1]);
     });
-
-
 }
 
 
