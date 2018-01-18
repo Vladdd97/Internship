@@ -7,7 +7,7 @@ function main() {
 }
 
 var geocoder;
-var marker;
+var markers = [];
 var map;
 
 function myMap(long, lat) {
@@ -20,16 +20,18 @@ function myMap(long, lat) {
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(mapCanvas, mapOptions);
-    marker = new google.maps.Marker({position: myCenter});
-    marker.setMap(map);
+    markers = new google.maps.Marker({position: myCenter});
+    markers.setMap(map);
 
     google.maps.event.addListener(map, 'click', function (e) {
-        marker.setMap(null);
-        marker = new google.maps.Marker({position: e.latLng});
-        marker.setMap(map);
-        $("#latitude").val(marker.getPosition().lat());
-        $("#longitude").val(marker.getPosition().lng());
-        geocodePosition(marker.getPosition())
+        if(markers.size < 2){
+            markers.setMap(null);
+        }
+        markers = new google.maps.Marker({position: e.latLng});
+        markers.setMap(map);
+        $("#latitude").val(markers.getPosition().lat());
+        $("#longitude").val(markers.getPosition().lng());
+        geocodePosition(markers.getPosition())
     });
 
 }
@@ -39,10 +41,10 @@ function geocodePosition(pos){
         latLng: pos
     }, function (responses) {
         if (responses && responses.length > 0){
-            marker.formatted_address = responses[0].formatted_address;
+            markers.formatted_address = responses[0].formatted_address;
         }
-        $("#address").val(marker.formatted_address);
-        $("#longLat").val(marker.getPosition().lat() + ":" + marker.getPosition().lng());
+        $("#address").val(markers.formatted_address);
+        $("#longLat").val(markers.getPosition().lat() + ":" + markers.getPosition().lng());
     })
 }
 

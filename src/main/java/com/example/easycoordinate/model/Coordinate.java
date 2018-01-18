@@ -13,7 +13,13 @@ public class Coordinate {
     private Long id;
 
     @NotBlank
+    private String addressStart;
+
+    @NotBlank
     private String coordinateStart;
+
+    @NotBlank
+    private String addressEnd;
 
     @NotBlank
     private String coordinateEnd;
@@ -42,4 +48,19 @@ public class Coordinate {
         this.coordinateEnd = coordinateEnd;
     }
 
+    public String getAddressStart() {
+        return addressStart;
+    }
+
+    public void setAddressStart(String addressStart) {
+        this.addressStart = addressStart;
+    }
+
+    public String getAddressEnd() {
+        return addressEnd;
+    }
+
+    public void setAddressEnd(String addressEnd) {
+        this.addressEnd = addressEnd;
+    }
 }
