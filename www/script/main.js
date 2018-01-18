@@ -2,26 +2,33 @@ $(document).ready(main);
 
 function main() {
     $("#addMarker").click(addMarker);
+    myMap(parseFloat(47.010921), parseFloat(28.840330));
+    setOutput();
 }
 
 function myMap(long, lat) {
     var myCenter = new google.maps.LatLng(long, lat);
     var mapCanvas = document.getElementById("map");
-    var mapOptions = {center: myCenter, zoom: 5};
+    var mapOptions = {center: myCenter, zoom: 10};
     var map = new google.maps.Map(mapCanvas, mapOptions);
     var marker = new google.maps.Marker({position: myCenter});
     marker.setMap(map);
+
+    google.maps.event.addListener(map, 'click', function(e) {
+        marker.setMap(null);
+        marker = new google.maps.Marker({position: e.latLng});
+        marker.setMap(map);
+    });
+
 }
 
 function addMarker() {
     var lat = parseFloat($("#latitude").val()),
         long = parseFloat($("#longitude").val());
-    myMap(lat, long);
-    setInput(lat, long);
-    //setOutput(long,lat);
-
-
+        myMap(lat, long);
+        setInput(lat, long);
 }
+
 
 function setInput(lat, long) {
     $.ajax({
@@ -32,7 +39,7 @@ function setInput(lat, long) {
         data: '{ "coordinateStart":' + lat + ', "coordinateEnd":' + long + '}',
         processData: false,
         success: function (data) {
-            alert("Input was successfully setted \n" + lat + "  " + long);
+            console.log("Input was successfully setted \n" + lat + "  " + long);
             console.log("\nInput : " + JSON.stringify(data));
             setOutput(lat, long);
         },
@@ -43,14 +50,15 @@ function setInput(lat, long) {
     });
 }
 
-function setOutput(lat, long) {
+function setOutput() {
     $.ajax({
         url: "http://localhost:8080/coordinates",
         type: 'GET',
         dataType: 'json',
         success: function (data) {
-            console.log("\nOutput(all database fields) : " + JSON.stringify(data));
-            $("#output").html("You have entered : lat = " + lat + " and long = " + long);
+            $.each(data, function (index, value) {
+                $('#output').append('<dt id="coords">'  + value.coordinateStart + ":" + value.coordinateEnd);
+            });
         },
         error: function (jqXhr, textStatus, errorThrown) {
             console.log(errorThrown);
@@ -58,5 +66,14 @@ function setOutput(lat, long) {
         }
     });
 
+    $('#output').on('click', 'dt', function() {
+        var click_text = $(this).text().split(':');
+        $('#selected').html('Selected ' + click_text[0] + " : " + click_text[1]);
+        myMap(click_text[0], click_text[1]);
+    });
+
 
 }
+
+
+
