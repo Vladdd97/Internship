@@ -5,6 +5,7 @@ var marker;
 var map;
 var directionsService;
 var directionsDisplay;
+var allDirectionsContainer;
 
 function main() {
     directionsService = new google.maps.DirectionsService;
@@ -37,7 +38,7 @@ function myMap(long, lat) {
 
 
         if (markers.length !== 3) {
-            console.log('Array length ' + markers.length);
+
             marker = new google.maps.Marker({
                 position: e.latLng,
                 draggable: true
@@ -169,9 +170,9 @@ function setOutput() {
         success: function (data) {
             $("#output").html(null);
             $.each(data, function (index, value) {
+                allDirectionsContainer = data;
                 $('#output')
-                    .append('<dt id="coords">' + value.addressStart + " - " + value.addressEnd);
-
+                    .append('<dt id="addresses">' + value.addressStart + " - " + value.addressEnd);
             });
         },
         error: function (jqXhr, textStatus, errorThrown) {
@@ -180,15 +181,42 @@ function setOutput() {
         }
     });
 
-    $('#output').on('click', 'dt', function () {
-        var click_text = $(this).text().split(' - ');
-        $('#startAddress').val(click_text[0]);
-        $('#endAddress').val(click_text[1]);
-        $('#selected').html('<b>Selected: </b>' + click_text[0] + " : " + click_text[1]);
-        calculateAndDisplayRoute(directionsService, directionsDisplay)
+}
+
+$('#output').on('click', 'dt', function () {
+    var click_text = $(this).text().split(' - ');
+    $('#startAddress').val(click_text[0]);
+    $('#endAddress').val(click_text[1]);
+    $('#selected').html('<b>Selected: </b>' + click_text[0] + " : " + click_text[1]);
+    calculateAndDisplayRoute(directionsService, directionsDisplay)
+});
+
+$('#output').on('contextmenu', 'dt', function () {
+    var click_text = $(this).text().split(' - ');
+    $.each(allDirectionsContainer, function(index, value){
+        if (click_text[0] === value.addressStart && click_text[1] === value.addressEnd){
+            deleteDirection(value.id);
+        }
+
+    })
+});
+
+function deleteDirection(id){
+
+    $.ajax({
+        url: "http://localhost:8080/coordinates/" + id,
+        type: 'DELETE',
+        success: function () {
+            setOutput();
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
     });
 
+
 }
+
 
 
 

@@ -51,7 +51,7 @@
     background-color: darkblue;
 }
 
-#coords {
+#addresses {
     width: 500px;
     height: 40px;
     background-color: blue;
@@ -64,7 +64,7 @@
     margin: auto;
     margin-top: 10px;
 }
-#coords:hover{
+#addresses:hover{
     background-color: darkblue;
 }
 
