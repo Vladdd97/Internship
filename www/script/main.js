@@ -1,6 +1,6 @@
 $(document).ready(main);
 var geocoder;
-var markers = [] ;
+var markers = [];
 var marker;
 var map;
 var directionsService;
@@ -28,38 +28,38 @@ function myMap(long, lat) {
     directionsDisplay.setMap(map);
     marker = new google.maps.Marker({
         position: myCenter,
-        draggable:true
+        draggable: true
     });
     markers.push(marker);
     clearMapMarkers();
 
     google.maps.event.addListener(map, 'click', function (e) {
-        if (markers.length !== 3){
+
+
+        if (markers.length !== 3) {
+            console.log('Array length ' + markers.length);
             marker = new google.maps.Marker({
                 position: e.latLng,
                 draggable: true
             });
             markers.push(marker);
-            console.log('Array length ' + markers.length);
             setMapOnAll(map);
 
-            console.log($('#startAddress').val());
-            console.log($('#endAddress').val());
-
-            if($('#startAddress').val() !== '' && $('#endAddress').val() !== ''){
+            if ($('#startAddress').val() !== '' && $('#endAddress').val() !== '') {
                 console.log('GOT INTO DIRECTIONS IF');
                 console.log($('#startAddress').val());
                 console.log($('#endAddress').val());
                 calculateAndDisplayRoute(directionsService, directionsDisplay);
             }
 
+
         } else {
             setMapOnAll(null);
+            markers = [];
             $("#startAddress").val(null);
             $("#endAddress").val(null);
             $("#startLongLat").val(null);
             $("#endLongLat").val(null);
-            markers = [];
         }
     });
 }
@@ -69,21 +69,23 @@ $("#addMarker").click(addMarker);
 function setMapOnAll(map) {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(map);
-        if(map != null){
-            geocodePosition( i);
+        if (map != null) {
+            geocodePosition(i);
         }
     }
 }
+
 function clearMapMarkers() {
     setMapOnAll(null);
     markers = [];
 }
+
 function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     directionsService.route({
         origin: $('#startAddress').val(),
         destination: $('#endAddress').val(),
         travelMode: 'DRIVING'
-    }, function(response, status) {
+    }, function (response, status) {
         if (status === 'OK') {
             console.log('success');
             console.log($('#startAddress').val());
@@ -100,51 +102,59 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     });
 }
 
-function geocodePosition(i){
+function geocodePosition(i) {
     geocoder.geocode({
-            latLng: markers[i].getPosition()
-        }, function (responses) {
-            if (responses && responses.length > 0){
-                markers[i].formatted_address = responses[0].formatted_address;
-            }
-            if( i === 0){
-                $("#startAddress").val(markers[i].formatted_address);
-                $("#startLongLat").val(markers[i].getPosition().lat() + ":" + markers[i].getPosition().lng());
-            }
-            if(i === 1){
-                $("#endAddress").val(markers[i].formatted_address);
-                $("#endLongLat").val(markers[i].getPosition().lat() + ":" + markers[i].getPosition().lng());
-            }
-        })
+        latLng: markers[i].getPosition()
+    }, function (responses) {
+        if (responses && responses.length > 0) {
+            markers[i].formatted_address = responses[0].formatted_address;
+        }
+        if (i === 0) {
+            $("#startAddress").val(markers[i].formatted_address);
+            $("#startLongLat").val(markers[i].getPosition().lat() + ":" + markers[i].getPosition().lng());
+        }
+        if (i === 1) {
+            $("#endAddress").val(markers[i].formatted_address);
+            $("#endLongLat").val(markers[i].getPosition().lat() + ":" + markers[i].getPosition().lng());
+        }
+    })
 }
-
 
 
 function addMarker() {
     var startAddress = $('#startAddress').val(),
-        startCoordinates = $('#startLongLat').val().trim().split(':'),
+        startCoordinates = $('#startLongLat').val().trim(),
         endAddress = $('#endAddress').val(),
-        endCoordinates = $('#endLongLat').val().trim().split(':');
+        endCoordinates = $('#endLongLat').val().trim();
     setInput(startAddress, startCoordinates, endAddress, endCoordinates);
 
 }
 
 
 function setInput(startAddress, startCoordinates, endAddress, endCoordinates) {
+
     $.ajax({
         url: "http://localhost:8080/coordinates",
         dataType: 'json',
         type: 'post',
         contentType: 'application/json',
         data:
-        '{ "addressStart":' + '"' + startAddress + '"' + ', "coordinateStart":' + '"' + startCoordinates + '"' +
-        '"addressEnd":' + '"' + endAddress + '"' + ', "coordinateEnd":' + '"' + endCoordinates + '"' + '}',
+        '{ ' +
+        '"addressStart":'       + '"' + startAddress        + '", ' +
+        '"coordinateStart":'    + '"' + startCoordinates    + '", ' +
+        '"addressEnd":'         + '"' + endAddress          + '", ' +
+        '"coordinateEnd":'      + '"' + endCoordinates      + '"' +
+        '}',
         processData: false,
         success: function () {
-            $('#selected').html('Successfully added: ' + startAddress + " " + endAddress);
+            $('#selected').html('Successfully added: ' + startAddress + " - " + endAddress);
             setOutput();
         },
         error: function (jqXhr, textStatus, errorThrown) {
+            console.log(startAddress);
+            console.log(startCoordinates);
+            console.log(endAddress);
+            console.log(endCoordinates);
             console.log(errorThrown);
             $("#output").html("Something is wrong with post request ... check it one more time please !");
         }
@@ -160,8 +170,7 @@ function setOutput() {
             $("#output").html(null);
             $.each(data, function (index, value) {
                 $('#output')
-                    .append('<dt id="coords">' + value.coordinateStart + " : " + value.coordinateEnd)
-                    .append('<span id="addressNames">' + value.addressStart + " - " + value.addressEnd + '</span>');
+                    .append('<dt id="coords">' + value.addressStart + " - " + value.addressEnd);
 
             });
         },
@@ -172,9 +181,11 @@ function setOutput() {
     });
 
     $('#output').on('click', 'dt', function () {
-        var click_text = $(this).text().split(' : ');
+        var click_text = $(this).text().split(' - ');
+        $('#startAddress').val(click_text[0]);
+        $('#endAddress').val(click_text[1]);
         $('#selected').html('<b>Selected: </b>' + click_text[0] + " : " + click_text[1]);
-        myMap(parseFloat(click_text[0]), parseFloat(click_text[1]));
+        calculateAndDisplayRoute(directionsService, directionsDisplay)
     });
 
 }
