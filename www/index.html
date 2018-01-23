@@ -3,48 +3,50 @@
 <head>
     <head>
         <meta charset="UTF-8">
-        <title>Google MAPS API Consumer</title>
+        <title>Map</title>
         <link rel="stylesheet" type="text/css" href="css/style1.css" >
-        <script src="script/jquery-3.2.1.js" ></script> >
     </head>
 </head>
 <body>
 <div id="page">
+
     <div id="map">
 
     </div>
 
     <div id="mapInput">
         <form name="form" id="form"  action="" >
-                <h3 align="center"> Select the route</h3>
-                <label for="startAddress"  >Adress</label>
-                <input type="text" id="startAddress" class="text">
-                <br><br>
-                <label for="startLongLat" >Coordinates</label>
-                <input type="text" id="startLongLat" class="text" readonly>
-                <br><br>
-                <label for="endAddress"  >Adress</label>
-                <input type="text" id="endAddress" class="text">
-                <br><br>
-                <label for="endLongLat" >Coordinates</label>
-                <input type="text" id="endLongLat" class="text" readonly>
-                <div id="addMarker" >Add Route</div>
+            <h3 align="center"> Select the route</h3>
+            <label for="startAddress"  >Start Adress</label>
+            <input type="text" id="startAddress" class="text">
+            <br><br>
+            <label for="startLatLng" >Coordinates</label>
+            <input type="text" id="startLatLng" class="text" readonly>
+            <br><br>
+            <label for="endAddress"  >End Adress</label>
+            <input type="text" id="endAddress" class="text">
+            <br><br>
+            <label for="endLatLng" >Coordinates</label>
+            <input type="text" id="endLatLng" class="text" readonly>
+            <div style="clear: both" ></div>
+            <div id="showRoute" >Show Route</div>
+            <div id="deleteRoute">Delete Route</div>
         </form>
-    </div>
-
-    <div id="output">
-
     </div>
 
     <div id="selected">
 
     </div>
 
+    <div id="output">
+
+    </div>
+
+
 </div>
 
-
-<!-- Scripts -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArZHrPHDbBfM5rWlbWFcbGTrTptyAeUz0&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArZHrPHDbBfM5rWlbWFcbGTrTptyAeUz0"></script>
+<script src="script/jquery-3.2.1.js" ></script> >
 <script src="script/main.js" ></script>
 
 </body>
