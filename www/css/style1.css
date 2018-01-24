@@ -91,3 +91,11 @@
     padding: 1%;
     background-color: #5cee00;
 }
+
+details>p:hover{
+    background-color: aliceblue;
+}
+
+#showRoute,#deleteRoute,details>p{
+    cursor: pointer;
+}

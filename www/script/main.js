@@ -11,6 +11,7 @@ function main() {
 
 function showRoute() {
     calculateAndDisplayRoute(directionsService, directionsDisplay);
+    setInput();
     clearMarkers();
 }
 
@@ -85,8 +86,6 @@ function geocodePosition(i) {
 
 // Show Route
 function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-    //console.log(markers[0].formatted_address);
-    //console.log(markers[1].formatted_address);
     directionsService.route({
         origin: $("#startAddress").val() ,
         destination: $("#endAddress").val() ,
@@ -105,7 +104,6 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
             window.alert('Directions request failed due to ' + status);
         }
     });
-    setInput();
 }
 
 
@@ -148,6 +146,7 @@ function setOutput() {
         type: 'GET',
         dataType: 'json',
         success: function (data) {
+            allDirectionsContainer = null;
             $("#output").html(null);
             $.each(data, function (index, value) {
                 allDirectionsContainer = data;
@@ -168,7 +167,7 @@ $('#output').on('click', 'dt', function () {
     $('#startAddress').val(click_text[0]);
     $('#endAddress').val(click_text[1]);
     $('#selected').html('<b>Selected: </b>' + click_text[0] + " : " + click_text[1]);
-    calculateAndDisplayRoute(directionsService, directionsDisplay)
+     calculateAndDisplayRoute(directionsService, directionsDisplay)
 });
 
 $('#output').on('contextmenu', 'dt', function () {
