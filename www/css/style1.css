@@ -40,7 +40,7 @@
     margin-left: 10px;
 }
 
-#showRoute,#deleteRoute,#showAvailableRoute{
+#showRoute,#deleteRoute,#showAvailableRoute,#toggleButtons>div{
     width: 100px;
     height: 20px;
     background-color: blue;
@@ -49,7 +49,7 @@
     border-radius: 10px;
     text-align: center;
     bottom: 10px;
-    float: right;
+    float: left;
     margin-top: 10px;
     margin-right: 10px;
 }
@@ -105,6 +105,16 @@ details{
     background-color: #aa54ff;
 }
 
-#showRoute,#deleteRoute,#showAvailableRoute,details>p{
+#showRoute,#deleteRoute,#showAvailableRoute,details>p,#toggleButtons>div{
     cursor: pointer;
+}
+
+#toggleButtons>div{
+    color: black;
+    background: #ffba37;
+}
+
+#toggleButtons>div:hover{
+    color: white;
+    background-color: #120a01;
 }

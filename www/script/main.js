@@ -116,7 +116,7 @@ function setInput() {
         endCoordinates = $("#endLatLng").val().trim(),
         time = new Date(),
         startTime = time.getTime(),
-        endTime = startTime+parseInt($("#requestLiveTime").val().split(" ")[0])*1000*60;
+        endTime = startTime+parseInt($("#requestLifeTime").val().split(" ")[0])*1000*60;
     $.ajax({
         url: "http://localhost:8080/coordinates",
         dataType: 'json',
@@ -130,7 +130,7 @@ function setInput() {
         '"coordinateEnd":' + '"' + endCoordinates + '", ' +
         '"startTime":' + '"' + startTime + '", ' +
         '"endTime":' + '"' + endTime + '", ' +
-        '"lifeTime":' + '"' + ($("#requestLiveTime").val().split(" ")[0]) + '"' +
+        '"lifeTime":' + '"' + ($("#requestLifeTime").val().split(" ")[0]) + '"' +
         '}',
         processData: false,
         success: function () {
@@ -211,7 +211,7 @@ $("details>p").click(function () {
         start = time.getTime(),
         end = start+parseInt($(this).text().split(" ")[0])*1000*60;
     console.log("start = "+start+" | end = "+end);
-    $("#requestLiveTime").val($(this).text());
+    $("#requestLifeTime").val($(this).text());
 });
 
 
@@ -236,4 +236,16 @@ $("#showAvailableRoute").click(function () {
             $("#availableRoute").html("Something is wrong with get request ... check it one more time please !");
         }
     });
+});
+
+$("#toggleButtons>div").eq(0).click(function () {
+    $("#selected").fadeToggle();
+});
+
+$("#toggleButtons>div").eq(1).click(function () {
+    $("#output").fadeToggle();
+});
+
+$("#toggleButtons>div").eq(2).click(function () {
+    $("#availableRoute").fadeToggle();
 });
