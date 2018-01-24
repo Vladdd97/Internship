@@ -116,7 +116,7 @@ function setInput() {
         endCoordinates = $("#endLatLng").val().trim(),
         time = new Date(),
         startTime = time.getTime(),
-        endTime = startTime+parseInt($("#requestLiveTime").val().split(" ")[0])*1000;
+        endTime = startTime+parseInt($("#requestLiveTime").val().split(" ")[0])*1000*60;
     $.ajax({
         url: "http://localhost:8080/coordinates",
         dataType: 'json',
@@ -205,7 +205,7 @@ function deleteDirection(id) {
 $("details>p").click(function () {
     var time = new Date(),
         start = time.getTime(),
-        end = start+parseInt($(this).text().split(" ")[0])*1000;
+        end = start+parseInt($(this).text().split(" ")[0])*1000*60;
     console.log("start = "+start+" | end = "+end);
     $("#requestLiveTime").val($(this).text());
 });

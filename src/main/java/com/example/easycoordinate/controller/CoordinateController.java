@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -25,7 +26,7 @@ public class CoordinateController {
     @GetMapping("/coordinates/{id}")
     public ResponseEntity<Coordinate> getNoteById(@PathVariable(value = "id") Long coordId) {
         Coordinate coordinate = coordinateRepository.findOne(coordId);
-        if(coordinate == null) {
+        if (coordinate == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(coordinate);
@@ -40,7 +41,7 @@ public class CoordinateController {
     public ResponseEntity<Coordinate> updateNote(@PathVariable(value = "id") Long coordId,
                                                  @Valid @RequestBody Coordinate coordinateDetails) {
         Coordinate coordinate = coordinateRepository.findOne(coordId);
-        if(coordinate == null) {
+        if (coordinate == null) {
             return ResponseEntity.notFound().build();
         }
         coordinate.setCoordinateStart(coordinateDetails.getCoordinateStart());
@@ -53,11 +54,22 @@ public class CoordinateController {
     @DeleteMapping("/coordinates/{id}")
     public ResponseEntity<Coordinate> deleteNote(@PathVariable(value = "id") Long coordId) {
         Coordinate coordinate = coordinateRepository.findOne(coordId);
-        if(coordinate == null) {
+        if (coordinate == null) {
             return ResponseEntity.notFound().build();
         }
 
         coordinateRepository.delete(coordinate);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/availableRoute")
+    public List<Coordinate> getAvailableRoute() {
+        List<Coordinate> availableRoute = new ArrayList<>();
+        for (Coordinate coordinate : coordinateRepository.findAll()) {
+           if ( System.currentTimeMillis() < Long.parseLong(coordinate.getEndTime())) {
+               availableRoute.add(coordinate);
+           }
+        }
+        return availableRoute;
     }
 }
