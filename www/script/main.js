@@ -1,3 +1,5 @@
+// need to output coordinates Too in address tag
+
 $(document).ready(main);
 var map;
 var markers = [];
@@ -200,7 +202,6 @@ function deleteDirection(id) {
 
 }
 
-// need to delete this
 $("details>p").click(function () {
     var time = new Date(),
         start = time.getTime(),
