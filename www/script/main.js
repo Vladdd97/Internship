@@ -92,9 +92,9 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         travelMode: 'DRIVING'
     }, function (response, status) {
         if (status === "OK") {
-            console.log('success');
-            console.log($('#startAddress').val());
-            console.log($('#endAddress').val());
+            // console.log('success');
+            // console.log($('#startAddress').val());
+            // console.log($('#endAddress').val());
             directionsDisplay.setDirections(response);
 
         } else {
@@ -111,7 +111,10 @@ function setInput() {
     var startAddress = $("#startAddress").val(),
         endAddress = $('#endAddress').val(),
         startCoordinates = $("#startLatLng").val().trim(),
-        endCoordinates = $("#endLatLng").val().trim();
+        endCoordinates = $("#endLatLng").val().trim(),
+        time = new Date(),
+        startTime = time.getTime(),
+        endTime = startTime+parseInt($("#requestLiveTime").val().split(" ")[0])*1000;
     $.ajax({
         url: "http://localhost:8080/coordinates",
         dataType: 'json',
@@ -122,7 +125,9 @@ function setInput() {
         '"addressStart":' + '"' + startAddress + '", ' +
         '"coordinateStart":' + '"' + startCoordinates + '", ' +
         '"addressEnd":' + '"' + endAddress + '", ' +
-        '"coordinateEnd":' + '"' + endCoordinates + '"' +
+        '"coordinateEnd":' + '"' + endCoordinates + '", ' +
+        '"startTime":' + '"' + startTime + '", ' +
+        '"endTime":' + '"' + endTime + '"' +
         '}',
         processData: false,
         success: function () {
@@ -194,3 +199,12 @@ function deleteDirection(id) {
     });
 
 }
+
+// need to delete this
+$("details>p").click(function () {
+    var time = new Date(),
+        start = time.getTime(),
+        end = start+parseInt($(this).text().split(" ")[0])*1000;
+    console.log("start = "+start+" | end = "+end);
+    $("#requestLiveTime").val($(this).text());
+});
