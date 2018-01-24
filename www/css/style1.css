@@ -59,7 +59,7 @@
     background-color: darkblue;
 }
 
-#addresses {
+.addresses {
     width: 500px;
     height: 40px;
     background-color: blue;
@@ -72,9 +72,20 @@
     margin: auto;
     margin-top: 10px;
 }
-#addresses:hover{
+.addresses:hover{
     background-color: darkblue;
 }
+
+#availableRoute>.addresses{
+    height: 60px;
+    background-color: #8776ff;
+}
+
+#availableRoute>.addresses:hover{
+    background-color: #49ff42;
+}
+
+
 
 
 #selected{
@@ -89,6 +100,11 @@ details>p:hover{
     background-color: aliceblue;
 }
 
-#showRoute,#deleteRoute,details>p{
+details{
+    margin-top: 10px;
+    background-color: #aa54ff;
+}
+
+#showRoute,#deleteRoute,#showAvailableRoute,details>p{
     cursor: pointer;
 }

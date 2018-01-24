@@ -30,6 +30,9 @@ public class Coordinate {
     @NotBlank
     private String endTime;
 
+    @NotBlank
+    private String lifeTime;
+
     public Long getId() {
         return id;
     }
@@ -84,5 +87,13 @@ public class Coordinate {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getLifeTime() {
+        return lifeTime;
+    }
+
+    public void setLifeTime(String lifeTime) {
+        this.lifeTime = lifeTime;
     }
 }

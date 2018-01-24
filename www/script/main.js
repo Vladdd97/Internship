@@ -129,7 +129,8 @@ function setInput() {
         '"addressEnd":' + '"' + endAddress + '", ' +
         '"coordinateEnd":' + '"' + endCoordinates + '", ' +
         '"startTime":' + '"' + startTime + '", ' +
-        '"endTime":' + '"' + endTime + '"' +
+        '"endTime":' + '"' + endTime + '", ' +
+        '"lifeTime":' + '"' + ($("#requestLiveTime").val().split(" ")[0]) + '"' +
         '}',
         processData: false,
         success: function () {
@@ -158,7 +159,7 @@ function setOutput() {
             $.each(data, function (index, value) {
                 allDirectionsContainer = data;
                 $("#output")
-                    .append('<dt id="addresses">' + value.addressStart + " - " + value.addressEnd);
+                    .append('<dt class="addresses">' + value.addressStart + " - " + value.addressEnd + " - [LifeTime : "+value.lifeTime+" minutes] [ "+value.id+" ]");
             });
         },
         error: function (jqXhr, textStatus, errorThrown) {
@@ -187,6 +188,7 @@ $('#output').on('contextmenu', 'dt', function () {
     })
 });
 
+
 function deleteDirection(id) {
 
     $.ajax({
@@ -202,10 +204,36 @@ function deleteDirection(id) {
 
 }
 
+// All functions bellow ... Need Improvement !!!
+
 $("details>p").click(function () {
     var time = new Date(),
         start = time.getTime(),
         end = start+parseInt($(this).text().split(" ")[0])*1000*60;
     console.log("start = "+start+" | end = "+end);
     $("#requestLiveTime").val($(this).text());
+});
+
+
+$("#showAvailableRoute").click(function () {
+    var time = new Date();
+    $.ajax({
+        url: "http://localhost:8080/availableRoute",
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            $("#availableRoute").html(null);
+            $.each(data, function (index, value) {
+                $("#availableRoute")
+                    .append('<dt class="addresses">' + value.addressStart +
+                        " - " + value.addressEnd + " - [LifeTime : "+value.lifeTime+
+                        " minutes]"+"[RemainingTime : "+
+                        ((parseFloat(value.endTime)-parseFloat(time.getTime()))/(1000*60)).toFixed(1)+" ]"+"[ "+value.id+" ]");
+            });
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+            console.log(errorThrown);
+            $("#availableRoute").html("Something is wrong with get request ... check it one more time please !");
+        }
+    });
 });
