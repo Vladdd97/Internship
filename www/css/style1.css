@@ -30,9 +30,6 @@
     background-color: gold;
 }
 /*need to delete this stuff*/
-#output{
-    /*display: none; */
-}
 
 .text{
     float: right;
@@ -61,7 +58,7 @@
 
 .addresses {
     width: 500px;
-    height: 40px;
+    height: 70px;
     background-color: blue;
     color: white;
     padding: 5px;

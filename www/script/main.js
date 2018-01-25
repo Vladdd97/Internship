@@ -89,15 +89,19 @@ function geocodePosition(i) {
 
 // Show Route
 function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+    var start = $("#startLngLat").val().split(":"),
+        end = $("#endLngLat").val().split(":");
     directionsService.route({
-        origin: $("#startAddress").val(),
-        destination: $("#endAddress").val(),
+        // origin: $("#startAddress").val(),
+        // destination: $("#endAddress").val(),
+        origin : new google.maps.LatLng(parseFloat(start[1]),parseFloat(start[0])),
+        destination : new google.maps.LatLng(parseFloat(end[1]),parseFloat(end[0])),
         travelMode: 'DRIVING'
     }, function (response, status) {
         if (status === "OK") {
-            // console.log('success');
-            // console.log($('#startAddress').val());
-            // console.log($('#endAddress').val());
+            console.log('success');
+            console.log($('#startAddress').val());
+            console.log($('#endAddress').val());
             directionsDisplay.setDirections(response);
 
         } else {
@@ -161,7 +165,9 @@ function setOutput() {
             $.each(data, function (index, value) {
                 allDirectionsContainer = data;
                 $("#output")
-                    .append('<dt class="addresses">' + value.addressStart + " - " + value.addressEnd + " - [LifeTime : " + value.lifeTime + " minutes] [ " + value.id + " ]");
+                    .append('<dt class="addresses">' +value.coordinateStart+" - "+value.coordinateEnd +" - "
+                        + value.addressStart + " - " + value.addressEnd + " - [LifeTime : " + value.lifeTime
+                        + " minutes] [ " + value.id + " ]" + "</dt>");
             });
         },
         error: function (jqXhr, textStatus, errorThrown) {
@@ -174,16 +180,18 @@ function setOutput() {
 
 $('#output').on('click', 'dt', function () {
     var click_text = $(this).text().split(" - ");
-    $('#startAddress').val(click_text[0]);
-    $('#endAddress').val(click_text[1]);
-    $('#selected').html('<b>Selected: </b>' + click_text[0] + " : " + click_text[1]);
+    $('#startLngLat').val(click_text[0]);
+    $('#endLngLat').val(click_text[1]);
+    $("#startAddress").val(click_text[2]);
+    $("#endAddress").val(click_text[3]);
+    $('#selected').html('<b>Selected: </b>' + click_text[2] + " : " + click_text[3]);
     calculateAndDisplayRoute(directionsService, directionsDisplay)
 });
 
 $('#output').on('contextmenu', 'dt', function () {
     var click_text = $(this).text().split(' - ');
     $.each(allDirectionsContainer, function (index, value) {
-        if (click_text[0] === value.addressStart && click_text[1] === value.addressEnd) {
+        if (click_text[0] === value.coordinateStart && click_text[1] === value.coordinateEnd) {
             deleteDirection(value.id);
         }
 
