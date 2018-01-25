@@ -33,6 +33,9 @@ public class Coordinate {
     @NotBlank
     private String lifeTime;
 
+    @NotBlank
+    private String routeDistance;
+
     public Long getId() {
         return id;
     }
@@ -95,5 +98,13 @@ public class Coordinate {
 
     public void setLifeTime(String lifeTime) {
         this.lifeTime = lifeTime;
+    }
+
+    public String getRouteDistance() {
+        return routeDistance;
+    }
+
+    public void setRouteDistance(String routeDistance) {
+        this.routeDistance = routeDistance;
     }
 }

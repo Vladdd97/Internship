@@ -40,7 +40,7 @@
     margin-left: 10px;
 }
 
-#showRoute,#deleteRoute,#showAvailableRoute,#toggleButtons>div{
+#showRoute,#deleteRoute,#showAvailableRoute,#toggleButtons>div,#calculateDist{
     width: 100px;
     height: 20px;
     background-color: blue;

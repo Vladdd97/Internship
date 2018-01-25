@@ -20,29 +20,36 @@
             <label for="startAddress"  >Start Adress</label>
             <input type="text" id="startAddress" class="text">
             <br><br>
-            <label for="startLatLng" >Coordinates</label>
-            <input type="text" id="startLatLng" class="text" readonly>
+            <label for="startLngLat" >Coordinates</label>
+            <input type="text" id="startLngLat" class="text" >
             <br><br>
             <label for="endAddress"  >End Adress</label>
             <input type="text" id="endAddress" class="text">
             <br><br>
-            <label for="endLatLng" >Coordinates</label>
-            <input type="text" id="endLatLng" class="text" readonly>
+            <label for="endLngLat" >Coordinates</label>
+            <input type="text" id="endLngLat" class="text" >
+            <br><br>
+            <label for="routeDistance" >Route Distance</label>
+            <input type="text" id="routeDistance" class="text" >
             <br><br>
             <label for="requestLifeTime" >Request Life Time</label>
             <input type="text" id="requestLifeTime" class="text" readonly>
+
+            <details>
+                <summary>Select LifeTime for your request</summary>
+                <p>1 minutes </p>
+                <p>5 minutes </p>
+                <p>10 minutes </p>
+                <p>15 minutes </p>
+            </details>
+
             <div style="clear: both" ></div>
             <div id="showRoute" >Show Route</div>
             <div id="showAvailableRoute"> AvRoute</div>
             <div id="deleteRoute">Delete Route</div>
+            <div id="calculateDist">Distance</div>
             <div style="clear: both" ></div>
-            <details>
-                <summary>Select LifeTime for your request</summary>
-                <p>1 minutes</p>
-                <p>5 minutes</p>
-                <p>10 minutes</p>
-                <p>15 minutes</p>
-            </details>
+
 
         </form>
         <div id="toggleButtons">

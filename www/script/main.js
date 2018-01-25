@@ -5,6 +5,7 @@ var map;
 var markers = [];
 var directionsService = new google.maps.DirectionsService();
 var directionsDisplay = new google.maps.DirectionsRenderer();
+
 function main() {
     initMap();
     $("#showRoute").click(showRoute);
@@ -25,24 +26,24 @@ function deleteRoute() {
 function setEmptyFields() {
     $("#startAddress").val(null);
     $("#endAddress").val(null);
-    $("#startLatLng").val(null);
-    $("#endLatLng").val(null);
+    $("#startLngLat").val(null);
+    $("#endLngLat").val(null);
 }
 
 function initMap() {
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,
-        center: {lat: 47.00989485019684, lng: 28.840969763696194 }
+        center: {lat: 47.00989485019684, lng: 28.840969763696194}
     });
     directionsDisplay.setMap(map);
 
-    map.addListener('click', function(e) {
+    map.addListener('click', function (e) {
         addMarker(e.latLng, map);
     });
 }
 
 function addMarker(latLng, map) {
-    if (markers.length > 1){
+    if (markers.length > 1) {
         alert("clear !");
         clearMarkers();
         setEmptyFields();
@@ -51,7 +52,7 @@ function addMarker(latLng, map) {
         position: latLng,
         map: map
     }));
-    geocodePosition(markers.length-1);
+    geocodePosition(markers.length - 1);
 }
 
 function setMapOnAll(map) {
@@ -77,11 +78,11 @@ function geocodePosition(i) {
         }
         if (i === 0) {
             $("#startAddress").val(markers[i].formatted_address);
-            $("#startLatLng").val(markers[i].getPosition().lat() + ":" + markers[i].getPosition().lng());
+            $("#startLngLat").val(markers[i].getPosition().lng() + ":" + markers[i].getPosition().lat());
         }
         if (i === 1) {
             $("#endAddress").val(markers[i].formatted_address);
-            $("#endLatLng").val(markers[i].getPosition().lat() + ":" + markers[i].getPosition().lng());
+            $("#endLngLat").val(markers[i].getPosition().lng() + ":" + markers[i].getPosition().lat());
         }
     })
 }
@@ -89,8 +90,8 @@ function geocodePosition(i) {
 // Show Route
 function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     directionsService.route({
-        origin: $("#startAddress").val() ,
-        destination: $("#endAddress").val() ,
+        origin: $("#startAddress").val(),
+        destination: $("#endAddress").val(),
         travelMode: 'DRIVING'
     }, function (response, status) {
         if (status === "OK") {
@@ -112,11 +113,11 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
 function setInput() {
     var startAddress = $("#startAddress").val(),
         endAddress = $('#endAddress').val(),
-        startCoordinates = $("#startLatLng").val().trim(),
-        endCoordinates = $("#endLatLng").val().trim(),
+        startCoordinates = $("#startLngLat").val().trim(),
+        endCoordinates = $("#endLngLat").val().trim(),
         time = new Date(),
         startTime = time.getTime(),
-        endTime = startTime+parseInt($("#requestLifeTime").val().split(" ")[0])*1000*60;
+        endTime = startTime + parseInt($("#requestLifeTime").val().split(" ")[0]) * 1000 * 60;
     $.ajax({
         url: "http://localhost:8080/coordinates",
         dataType: 'json',
@@ -130,7 +131,8 @@ function setInput() {
         '"coordinateEnd":' + '"' + endCoordinates + '", ' +
         '"startTime":' + '"' + startTime + '", ' +
         '"endTime":' + '"' + endTime + '", ' +
-        '"lifeTime":' + '"' + ($("#requestLifeTime").val().split(" ")[0]) + '"' +
+        '"lifeTime":' + '"' + ($("#requestLifeTime").val().split(" ")[0]) + '", ' +
+        '"routeDistance":' + '"' + ($("#routeDistance").val().split(" ")[0]) + '"' +
         '}',
         processData: false,
         success: function () {
@@ -159,7 +161,7 @@ function setOutput() {
             $.each(data, function (index, value) {
                 allDirectionsContainer = data;
                 $("#output")
-                    .append('<dt class="addresses">' + value.addressStart + " - " + value.addressEnd + " - [LifeTime : "+value.lifeTime+" minutes] [ "+value.id+" ]");
+                    .append('<dt class="addresses">' + value.addressStart + " - " + value.addressEnd + " - [LifeTime : " + value.lifeTime + " minutes] [ " + value.id + " ]");
             });
         },
         error: function (jqXhr, textStatus, errorThrown) {
@@ -175,7 +177,7 @@ $('#output').on('click', 'dt', function () {
     $('#startAddress').val(click_text[0]);
     $('#endAddress').val(click_text[1]);
     $('#selected').html('<b>Selected: </b>' + click_text[0] + " : " + click_text[1]);
-     calculateAndDisplayRoute(directionsService, directionsDisplay)
+    calculateAndDisplayRoute(directionsService, directionsDisplay)
 });
 
 $('#output').on('contextmenu', 'dt', function () {
@@ -207,10 +209,10 @@ function deleteDirection(id) {
 // All functions bellow ... Need Improvement !!!
 
 $("details>p").click(function () {
-    var time = new Date(),
-        start = time.getTime(),
-        end = start+parseInt($(this).text().split(" ")[0])*1000*60;
-    console.log("start = "+start+" | end = "+end);
+    // var time = new Date(),
+    //     start = time.getTime(),
+    //     end = start+parseInt($(this).text().split(" ")[0])*1000*60;
+    // console.log("start = "+start+" | end = "+end);
     $("#requestLifeTime").val($(this).text());
 });
 
@@ -226,9 +228,9 @@ $("#showAvailableRoute").click(function () {
             $.each(data, function (index, value) {
                 $("#availableRoute")
                     .append('<dt class="addresses">' + value.addressStart +
-                        " - " + value.addressEnd + " - [LifeTime : "+value.lifeTime+
-                        " minutes]"+"[RemainingTime : "+
-                        ((parseFloat(value.endTime)-parseFloat(time.getTime()))/(1000*60)).toFixed(1)+" ]"+"[ "+value.id+" ]");
+                        " - " + value.addressEnd + " - [LifeTime : " + value.lifeTime +
+                        " minutes]" + "[RemainingTime : " +
+                        ((parseFloat(value.endTime) - parseFloat(time.getTime())) / (1000 * 60)).toFixed(2) + " ]" + "[ " + value.id + " ]");
             });
         },
         error: function (jqXhr, textStatus, errorThrown) {
@@ -249,3 +251,25 @@ $("#toggleButtons>div").eq(1).click(function () {
 $("#toggleButtons>div").eq(2).click(function () {
     $("#availableRoute").fadeToggle();
 });
+
+$("#calculateDist").click(function () {
+    var lat1 = parseFloat($("#startLngLat").val().split(":")[1]),
+        lng1 = parseFloat($("#startLngLat").val().split(":")[0]),
+        lat2 = parseFloat($("#endLngLat").val().split(":")[1]),
+        lng2 = parseFloat($("#endLngLat").val().split(":")[0]),
+        R = 6371000, // Radius of the earth in m
+        dLat = deg2rad(lat2-lat1),  //transform in rad
+        dLon = deg2rad(lng2-lng1),
+        a =
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon/2) * Math.sin(dLon/2),
+        c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)),
+        distance = (R * c).toFixed(1); // Distance in m
+    $("#routeDistance").val(distance + " meters");
+});
+
+
+function deg2rad(deg) {
+    return deg * (Math.PI/180)
+}
