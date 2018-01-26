@@ -100,8 +100,8 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     }, function (response, status) {
         if (status === "OK") {
             console.log('success');
-            console.log($('#startAddress').val());
-            console.log($('#endAddress').val());
+            // console.log($('#startAddress').val());
+            // console.log($('#endAddress').val());
             directionsDisplay.setDirections(response);
 
         } else {
@@ -247,6 +247,7 @@ $("#showAvailableRoute").click(function () {
         }
     });
 });
+
 
 $("#toggleButtons>div").eq(0).click(function () {
     $("#selected").fadeToggle();

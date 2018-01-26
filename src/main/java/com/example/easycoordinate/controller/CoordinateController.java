@@ -2,6 +2,7 @@ package com.example.easycoordinate.controller;
 
 import com.example.easycoordinate.model.Coordinate;
 import com.example.easycoordinate.repository.CoordinateRepository;
+import com.example.easycoordinate.service.CoordinateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,12 +65,13 @@ public class CoordinateController {
 
     @GetMapping("/availableRoute")
     public List<Coordinate> getAvailableRoute() {
-        List<Coordinate> availableRoute = new ArrayList<>();
-        for (Coordinate coordinate : coordinateRepository.findAll()) {
-           if ( System.currentTimeMillis() < Long.parseLong(coordinate.getEndTime())) {
-               availableRoute.add(coordinate);
-           }
-        }
-        return availableRoute;
+        return CoordinateService.getAvailableRoute(coordinateRepository.findAll());
+    }
+
+    @GetMapping("/sameRoute/{index}")
+    public List<Coordinate> getSameRoute(@PathVariable(value = "index") Long coordIndex) {
+        return CoordinateService.getSameRoute(
+                coordinateRepository.findOne(coordIndex),
+                coordinateRepository.findAll());
     }
 }
