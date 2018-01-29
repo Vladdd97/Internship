@@ -1,32 +1,49 @@
 package com.example.easycoordinate.controller;
 
+import com.example.easycoordinate.model.ApplicationUser;
 import com.example.easycoordinate.model.Coordinate;
+import com.example.easycoordinate.repository.ApplicationUserRepository;
 import com.example.easycoordinate.repository.CoordinateRepository;
 import com.example.easycoordinate.service.CoordinateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/")
+@RequestMapping("/users/{applicationUserId}")
 public class CoordinateController {
+
+    private Logger log = Logger.getLogger(CoordinateController.class.getName());
 
     @Autowired
     CoordinateRepository coordinateRepository;
 
-    @GetMapping("/coordinates")
-    public List<Coordinate> getAllNotes() {
-        return coordinateRepository.findAll();
+    @Autowired
+    ApplicationUserRepository applicationUserRepository;
+
+    @GetMapping(value = "/coordinates")
+    public List<Coordinate> getAllCoordinates(@PathVariable(value = "applicationUserId") Long applicationUserId) {
+        return coordinateRepository.findAllByApplicationUserId(applicationUserId);
     }
 
     @GetMapping("/coordinates/{id}")
-    public ResponseEntity<Coordinate> getNoteById(@PathVariable(value = "id") Long coordId) {
-        Coordinate coordinate = coordinateRepository.findOne(coordId);
+    public ResponseEntity<Coordinate> getCoordinateById(
+            @PathVariable(value = "applicationUserId") Long applicationUserId,
+            @PathVariable(value = "id") Long coordId) {
+        List<Coordinate> coordinates = coordinateRepository.findAllByApplicationUserId(applicationUserId);
+
+        Coordinate coordinate = coordinates
+                .stream()
+                .filter(c -> c.getId().equals(coordId))
+                .findFirst()
+                .orElse(null);
+
         if (coordinate == null) {
             return ResponseEntity.notFound().build();
         }
@@ -34,42 +51,69 @@ public class CoordinateController {
     }
 
     @PostMapping("/coordinates")
-    public Coordinate createNote(@Valid @RequestBody Coordinate coordinate) {
-        return coordinateRepository.save(coordinate);
+    public ResponseEntity<Coordinate> createCoordinate(@PathVariable(value = "applicationUserId") Long applicationUserId,
+                                                       @Valid @RequestBody Coordinate coordinate) {
+
+        ApplicationUser user = applicationUserRepository.getApplicationUserById(applicationUserId);
+        if (user != null && user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal())) {
+            coordinate.setApplicationUser(applicationUserRepository.getApplicationUserById(applicationUserId));
+            coordinateRepository.save(coordinate);
+            return ResponseEntity.ok().body(coordinate);
+        }
+
+        log.info("No coordinate was added!");
+        return ResponseEntity.badRequest().build();
+
     }
 
     @PutMapping("/coordinates/{id}")
-    public ResponseEntity<Coordinate> updateNote(@PathVariable(value = "id") Long coordId,
-                                                 @Valid @RequestBody Coordinate coordinateDetails) {
+    public ResponseEntity<Coordinate> updateCoordinate(@PathVariable(value = "applicationUserId") Long aui,
+                                                       @PathVariable(value = "id") Long coordId,
+                                                       @Valid @RequestBody Coordinate coordinateDetails) {
+
         Coordinate coordinate = coordinateRepository.findOne(coordId);
         if (coordinate == null) {
             return ResponseEntity.notFound().build();
         }
-        coordinate.setCoordinateStart(coordinateDetails.getCoordinateStart());
-        coordinate.setCoordinateEnd(coordinateDetails.getCoordinateEnd());
 
-        Coordinate updatedCoordinate = coordinateRepository.save(coordinate);
-        return ResponseEntity.ok(updatedCoordinate);
+        ApplicationUser user = applicationUserRepository.getApplicationUserById(aui);
+        if (user != null && user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal())) {
+            coordinate.setAddressStart(coordinateDetails.getAddressStart());
+            coordinate.setAddressStart(coordinateDetails.getAddressEnd());
+            coordinate.setCoordinateStart(coordinateDetails.getCoordinateStart());
+            coordinate.setCoordinateEnd(coordinateDetails.getCoordinateEnd());
+            Coordinate updatedCoordinate = coordinateRepository.save(coordinate);
+            return ResponseEntity.ok(updatedCoordinate);
+        }
+        log.info("No coordinate was modified");
+        return ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping("/coordinates/{id}")
-    public ResponseEntity<Coordinate> deleteNote(@PathVariable(value = "id") Long coordId) {
+    public ResponseEntity<Coordinate> deleteCoordinate(@PathVariable(value = "applicationUserId") Long aui,
+                                                       @PathVariable(value = "id") Long coordId) {
+
         Coordinate coordinate = coordinateRepository.findOne(coordId);
         if (coordinate == null) {
             return ResponseEntity.notFound().build();
         }
+        ApplicationUser user = applicationUserRepository.getApplicationUserById(aui);
+        if (user != null && user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal())) {
+            coordinateRepository.delete(coordinate);
+            return ResponseEntity.ok().build();
+        }
+        log.info("No coordinate was deleted!");
+        return ResponseEntity.badRequest().build();
 
-        coordinateRepository.delete(coordinate);
-        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/availableRoute")
-    public List<Coordinate> getAvailableRoute() {
-        return CoordinateService.getAvailableRoute(coordinateRepository.findAll());
+    @GetMapping("/availableRoutes")
+    public List<Coordinate> getAvailableRoutes() {
+        return CoordinateService.getAvailableRoutes(coordinateRepository.findAll());
     }
 
-    @GetMapping("/sameRoute/{index}")
-    public List<Coordinate> getSameRoute(@PathVariable(value = "index") Long coordIndex) {
+    @GetMapping("/sameRoutes/{index}")
+    public List<Coordinate> getSameRoutes(@PathVariable(value = "index") Long coordIndex) {
         return CoordinateService.getSameRoute(
                 coordinateRepository.findOne(coordIndex),
                 coordinateRepository.findAll());

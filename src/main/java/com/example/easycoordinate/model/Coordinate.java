@@ -1,5 +1,6 @@
 package com.example.easycoordinate.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -11,6 +12,11 @@ public class Coordinate {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "application_user_id", nullable = false)
+    private ApplicationUser applicationUser;
 
     @NotBlank
     private String addressStart;
@@ -106,5 +112,13 @@ public class Coordinate {
 
     public void setRouteDistance(String routeDistance) {
         this.routeDistance = routeDistance;
+    }
+
+    public ApplicationUser getApplicationUser() {
+        return applicationUser;
+    }
+
+    public void setApplicationUser(ApplicationUser applicationUser) {
+        this.applicationUser = applicationUser;
     }
 }

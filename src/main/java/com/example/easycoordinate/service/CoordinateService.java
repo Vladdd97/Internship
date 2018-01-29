@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class CoordinateService {
 
-    public static List<Coordinate> getAvailableRoute(List<Coordinate> allRoutes) {
+    public static List<Coordinate> getAvailableRoutes(List<Coordinate> allRoutes) {
         List<Coordinate> availableRoute = new ArrayList<>();
         for (Coordinate coordinate : allRoutes) {
             if ( System.currentTimeMillis() < Long.parseLong(coordinate.getEndTime())) {
@@ -19,29 +19,28 @@ public class CoordinateService {
         return availableRoute;
     }
 
-    public static double getDistance(double lng1,double lat1,double lng2, double lat2){
+    private static double getDistance(double lng1, double lat1, double lng2, double lat2){
         double R = 6371000; // Radius of the earth in m
         double dLat = deg2rad(lat2-lat1);  //transform in rad
         double dLon = deg2rad(lng2-lng1);
-        double a = (double)( Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) *
-                Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2) );
-        double c = (double)( 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) );
-        double distance = (R * c); // Distance in m
-        return distance;
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) *
+                Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return (R * c);
     }
 
-    public static double deg2rad(double deg){
+    private static double deg2rad(double deg){
         return (deg*(Math.PI/180));
     }
 
     public static List<Coordinate> getSameRoute(Coordinate clientPosition ,List<Coordinate>allRoute){
         double radius = 300f;
         List<Coordinate> result = new ArrayList<>();
-        List<Coordinate> availableRoute = getAvailableRoute(allRoute);
+        List<Coordinate> availableRoutes = getAvailableRoutes(allRoute);
         String[] startPointA = clientPosition.getCoordinateStart().split(":");
         String [] endPointA = clientPosition.getCoordinateEnd().split(":");
 
-        for(Coordinate coord : availableRoute){
+        for(Coordinate coord : availableRoutes){
             String[] startPointB = coord.getCoordinateStart().split(":");
             String [] endPointB = coord.getCoordinateEnd().split(":");
             double distanceX = CoordinateService.getDistance(

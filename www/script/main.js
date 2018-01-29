@@ -1,5 +1,5 @@
 // need to output coordinates Too in address tag
-
+$token = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNTE4MDkyNzI3fQ.yKO8obis_HThLBVRoomuMcTr9IgA7IWOBRcZDqz41qCUK0Ds_o78S-P4jwsqZCLMdCDjUUYl6J2sNX2QOlY9zg";
 $(document).ready(main);
 var map;
 var markers = [];
@@ -94,8 +94,8 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     directionsService.route({
         // origin: $("#startAddress").val(),
         // destination: $("#endAddress").val(),
-        origin : new google.maps.LatLng(parseFloat(start[1]),parseFloat(start[0])),
-        destination : new google.maps.LatLng(parseFloat(end[1]),parseFloat(end[0])),
+        origin: new google.maps.LatLng(parseFloat(start[1]), parseFloat(start[0])),
+        destination: new google.maps.LatLng(parseFloat(end[1]), parseFloat(end[0])),
         travelMode: 'DRIVING'
     }, function (response, status) {
         if (status === "OK") {
@@ -123,8 +123,11 @@ function setInput() {
         startTime = time.getTime(),
         endTime = startTime + parseInt($("#requestLifeTime").val().split(" ")[0]) * 1000 * 60;
     $.ajax({
-        url: "http://localhost:8080/coordinates",
+        url: "http://localhost:8080/users/1/coordinates",
         dataType: 'json',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader ("Authorization", $token);
+        },
         type: 'post',
         contentType: 'application/json',
         data:
@@ -158,6 +161,9 @@ function setOutput() {
     $.ajax({
         url: "http://localhost:8080/coordinates",
         type: 'GET',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader ("Authorization", $token);
+        },
         dataType: 'json',
         success: function (data) {
             allDirectionsContainer = null;
@@ -165,7 +171,7 @@ function setOutput() {
             $.each(data, function (index, value) {
                 allDirectionsContainer = data;
                 $("#output")
-                    .append('<dt class="addresses">' +value.coordinateStart+" - "+value.coordinateEnd +" - "
+                    .append('<dt class="addresses">' + value.coordinateStart + " - " + value.coordinateEnd + " - "
                         + value.addressStart + " - " + value.addressEnd + " - [LifeTime : " + value.lifeTime
                         + " minutes] [ " + value.id + " ]" + "</dt>");
             });
@@ -230,6 +236,7 @@ $("#showAvailableRoute").click(function () {
     $.ajax({
         url: "http://localhost:8080/availableRoute",
         type: 'GET',
+        authorization: $token,
         dataType: 'json',
         success: function (data) {
             $("#availableRoute").html(null);
@@ -267,18 +274,39 @@ $("#calculateDist").click(function () {
         lat2 = parseFloat($("#endLngLat").val().split(":")[1]),
         lng2 = parseFloat($("#endLngLat").val().split(":")[0]),
         R = 6371000, // Radius of the earth in m
-        dLat = deg2rad(lat2-lat1),  //transform in rad
-        dLon = deg2rad(lng2-lng1),
+        dLat = deg2rad(lat2 - lat1),  //transform in rad
+        dLon = deg2rad(lng2 - lng1),
         a =
-            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
             Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-            Math.sin(dLon/2) * Math.sin(dLon/2),
-        c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)),
+            Math.sin(dLon / 2) * Math.sin(dLon / 2),
+        c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)),
         distance = (R * c).toFixed(1); // Distance in m
     $("#routeDistance").val(distance + " meters");
 });
 
 
 function deg2rad(deg) {
-    return deg * (Math.PI/180)
+    return deg * (Math.PI / 180)
 }
+
+$("#login").click(function () {
+    var user = $("#username").val().trim();
+
+    var pass = $("#password").val().trim();
+
+    console.log(user);
+    console.log(pass);
+    $.ajax({
+            url: "http://localhost:8080/login",
+            type: 'POST',
+            contentType: 'application/json',
+            data: '{"username" : "' + user + '", "password" : "' + pass + '"}',
+            success: function (data,textStatus, xhr) {
+                alert("logged in!");
+                console.log(xhr.getAllResponseHeaders())
+            }, error: function(request){
+                alert("not logged in!")
+        }
+        })
+})
