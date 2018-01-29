@@ -10,16 +10,20 @@
 <body>
 <div id="page">
 
-    <form id="loginStatus" >
+    <form id="beforeLogin">
+        <h3>Please login or register in order to continue!</h3>
         <label for="username">Input a valid username: </label>
         <input id="username" type="text" placeholder="Username">
         <br><br>
         <label for="password">Input a valid password: </label>
         <input id="password" type="password" placeholder="Password">
-
         <div id="login" >Login</div>
+        <div id="register">Register</div>
+    </form>
 
-
+    <form id="afterLogin" style="display: none">
+        <div id="usernameWelcome">You are logged in!</div>
+        <div id="logout">Logout</div>
     </form>
 
 
@@ -61,6 +65,7 @@
             <div id="showRoute" >Show Route</div>
             <div id="showAvailableRoute"> AvRoute</div>
             <div id="deleteRoute">Delete Route</div>
+            <div id="showAll">Show all</div>
             <div id="calculateDist">Distance</div>
             <div style="clear: both" ></div>
 

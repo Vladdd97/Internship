@@ -64,6 +64,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         configuration.setAllowedOrigins(Collections.singletonList("*"));
         configuration.setAllowedMethods(Arrays.asList("HEAD",
                 "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers", "Content-Type", "Authorization",
+                "Content-Length", "X-Requested-With", "UserID", "Access-Control-Expose-Headers" ));
+        configuration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Headers", "Content-Type", "Authorization",
+                "Content-Length", "X-Requested-With", "UserID", "Access-Control-Expose-Headers"));
+        configuration.addExposedHeader("Authorization");
+        configuration.addExposedHeader("UserID");
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

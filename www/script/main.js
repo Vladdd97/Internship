@@ -1,10 +1,11 @@
 // need to output coordinates Too in address tag
-$token = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNTE4MDkyNzI3fQ.yKO8obis_HThLBVRoomuMcTr9IgA7IWOBRcZDqz41qCUK0Ds_o78S-P4jwsqZCLMdCDjUUYl6J2sNX2QOlY9zg";
 $(document).ready(main);
 var map;
 var markers = [];
 var directionsService = new google.maps.DirectionsService();
 var directionsDisplay = new google.maps.DirectionsRenderer();
+var $token, $userID;
+
 
 function main() {
     initMap();
@@ -123,10 +124,10 @@ function setInput() {
         startTime = time.getTime(),
         endTime = startTime + parseInt($("#requestLifeTime").val().split(" ")[0]) * 1000 * 60;
     $.ajax({
-        url: "http://localhost:8080/users/1/coordinates",
+        url: "http://localhost:8080/users/" + $userID + "/coordinates",
         dataType: 'json',
         beforeSend: function (xhr) {
-            xhr.setRequestHeader ("Authorization", $token);
+            xhr.setRequestHeader("Authorization", $token);
         },
         type: 'post',
         contentType: 'application/json',
@@ -159,10 +160,10 @@ function setInput() {
 
 function setOutput() {
     $.ajax({
-        url: "http://localhost:8080/coordinates",
+        url: "http://localhost:8080/users/" + $userID +  "/coordinates",
         type: 'GET',
         beforeSend: function (xhr) {
-            xhr.setRequestHeader ("Authorization", $token);
+            xhr.setRequestHeader("Authorization", $token);
         },
         dataType: 'json',
         success: function (data) {
@@ -208,7 +209,7 @@ $('#output').on('contextmenu', 'dt', function () {
 function deleteDirection(id) {
 
     $.ajax({
-        url: "http://localhost:8080/coordinates/" + id,
+        url: "http://localhost:8080/users/" + $userID + "coordinates/" + id,
         type: 'DELETE',
         success: function () {
             setOutput();
@@ -234,7 +235,7 @@ $("details>p").click(function () {
 $("#showAvailableRoute").click(function () {
     var time = new Date();
     $.ajax({
-        url: "http://localhost:8080/availableRoute",
+        url: 'http://localhost:8080/users/' + $userID + '/availableRoute',
         type: 'GET',
         authorization: $token,
         dataType: 'json',
@@ -297,16 +298,61 @@ $("#login").click(function () {
 
     console.log(user);
     console.log(pass);
+
     $.ajax({
-            url: "http://localhost:8080/login",
-            type: 'POST',
-            contentType: 'application/json',
-            data: '{"username" : "' + user + '", "password" : "' + pass + '"}',
-            success: function (data,textStatus, xhr) {
-                alert("logged in!");
-                console.log(xhr.getAllResponseHeaders())
-            }, error: function(request){
-                alert("not logged in!")
+        url: "http://localhost:8080/login",
+        type: 'POST',
+        contentType: 'application/json',
+        data: '{"username" : "' + user + '", "password" : "' + pass + '"}',
+        success: function (data, textStatus, xhr) {
+            alert("Logged in!");
+            console.log(xhr.getResponseHeader('authorization'));
+            console.log(xhr.getResponseHeader('UserID'));
+            $token = xhr.getResponseHeader('authorization');
+            $userID = xhr.getResponseHeader('UserID');
+            $("#beforeLogin").hide();
+            $("#afterLogin").show();
+            $("#usernameWelcome").html("You are logged in as " + user + "!")
+            setOutput();
+        }, error: function (textStatus, xhr) {
+            alert("Not logged in!");
+            console.log(textStatus);
         }
-        })
-})
+    })
+});
+
+$("#logout").click(function () {
+    $("#username").val(null);
+    $("#password").val(null);
+    alert("Logged out!");
+    $token = null;
+    $userID = null;
+    $("#afterLogin").hide();
+    $("#beforeLogin").show();
+});
+
+
+
+$("#register").click(function () {
+    var user = $("#username").val().trim();
+    var pass = $("#password").val().trim();
+
+    console.log(user);
+    console.log(pass);
+
+    $.ajax({
+        url: "http://localhost:8080/users/sign-up",
+        type: 'POST',
+        contentType: 'application/json',
+        data: '{"username" : "' + user + '", "password" : "' + pass + '"}',
+        success: function (data, textStatus, xhr) {
+            alert("Successfully registered! Please use the username: " + user
+                + " and a valid password in order to continue!");
+
+        }, error: function (textStatus, xhr) {
+            alert("Not logged in!");
+            console.log(textStatus);
+        }
+    })
+});
+

@@ -30,6 +30,10 @@ public class EasyCoordinateApplication {
 		config.addAllowedMethod("POST");
 		config.addAllowedMethod("DELETE");
 		config.addAllowedMethod("PATCH");
+		config.addAllowedHeader("Authorization");
+		config.addExposedHeader("Authorization");
+		config.addAllowedHeader("UserID");
+		config.addExposedHeader("UserID");
 		source.registerCorsConfiguration("/**", config);
 		return new CorsFilter(source);
 	}

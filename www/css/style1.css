@@ -37,7 +37,31 @@
     margin-left: 10px;
 }
 
-#showRoute,#deleteRoute,#showAvailableRoute,#toggleButtons>div,#calculateDist{
+#login, #register, #logout{
+    background:    #3d85c6;
+    background:    -webkit-linear-gradient(#3d85c6, #073763);
+    background:    linear-gradient(#3d85c6, #073763);
+    border-radius: 5px;
+    padding:       8px 20px;
+    color:         #ffffff;
+    display:       inline-block;
+    font:          normal 400 12px/1 "Calibri", sans-serif;
+    text-align:    center;
+    text-shadow:   none;
+}
+
+#login:hover, #register:hover, #logout:hover{
+    background: #3cb0fd;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+}
+
+#showRoute, #showAll,#deleteRoute,#showAvailableRoute,
+#toggleButtons>div,#calculateDist{
     width: 100px;
     height: 20px;
     background-color: blue;
@@ -102,7 +126,8 @@ details{
     background-color: #aa54ff;
 }
 
-#showRoute,#deleteRoute,#showAvailableRoute,details>p,#toggleButtons>div{
+#showRoute,#showAll,#deleteRoute,#showAvailableRoute,details>p,#toggleButtons>div,
+#login, #register, #logout{
     cursor: pointer;
 }
 
@@ -115,5 +140,4 @@ details{
     color: white;
     background-color: #120a01;
 }
-
 

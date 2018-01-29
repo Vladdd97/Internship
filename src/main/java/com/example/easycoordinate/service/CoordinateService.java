@@ -2,21 +2,25 @@ package com.example.easycoordinate.service;
 
 import com.example.easycoordinate.model.Coordinate;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class CoordinateService {
 
+    private static Logger log = Logger.getLogger(CoordinateService.class.getName());
+
     public static List<Coordinate> getAvailableRoutes(List<Coordinate> allRoutes) {
-        List<Coordinate> availableRoute = new ArrayList<>();
+        List<Coordinate> availableRoutes = new ArrayList<>();
         for (Coordinate coordinate : allRoutes) {
             if ( System.currentTimeMillis() < Long.parseLong(coordinate.getEndTime())) {
-                availableRoute.add(coordinate);
+                availableRoutes.add(coordinate);
             }
         }
-        return availableRoute;
+        return availableRoutes;
     }
 
     private static double getDistance(double lng1, double lat1, double lng2, double lat2){
