@@ -45,6 +45,8 @@ public class CoordinateService {
         String [] endPointA = clientPosition.getCoordinateEnd().split(":");
 
         for(Coordinate coord : availableRoutes){
+            if ( clientPosition.getId().longValue() == coord.getId().longValue() )
+                continue;
             String[] startPointB = coord.getCoordinateStart().split(":");
             String [] endPointB = coord.getCoordinateEnd().split(":");
             double distanceX = CoordinateService.getDistance(
