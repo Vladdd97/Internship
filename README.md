@@ -2,7 +2,7 @@
 
 1. Clone the application
 
-        git@github.com:Vladdd97/Internship.git
+        git@github.com/isd-soft/car-sharing-service.git
 
 2. Create Mysql database
 
