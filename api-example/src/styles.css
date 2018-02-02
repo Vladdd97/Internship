@@ -1,0 +1,33 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+.external-card {
+  width: 600px;
+}
+
+agm-map {
+  height: 300px;
+  width: 600px;
+}
+
+#map {
+  height: 300px;
+  width: 600px;
+}
+
+mat-toolbar{
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+mat-icon {
+  cursor: pointer;
+}

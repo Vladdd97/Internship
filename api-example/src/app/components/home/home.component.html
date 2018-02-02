@@ -1,0 +1,33 @@
+<div class="col-md-6 col-md-offset-3">
+  <mat-toolbar color="primary">
+    Welcome {{user}}!
+    <div class="spacer"></div>
+    <a [routerLink]="['/login']" class="btn btn-primary">Logout</a>
+  </mat-toolbar>
+
+    <mat-card class="external-card">
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>Your directions, {{user}}.</mat-expansion-panel-header>
+        <mat-card *ngFor="let coordinate of coordinates" (click)="setMapDirection($event, coordinate)">
+        <b>From </b> {{coordinate.addressStart}}
+        <p></p>
+        <b> to </b> {{coordinate.addressEnd}}
+
+        <mat-card-actions align="right">
+          <mat-icon (click)="update($event, coordinate); $event.stopPropagation()">
+            mode_edit
+          </mat-icon>
+          <mat-icon onclick="demo.showNotification('bottom', 'right', 'Successfully removed!')"
+                    (click)="delete($event, coordinate.id); $event.stopPropagation()">
+            delete
+          </mat-icon>
+        </mat-card-actions>
+      </mat-card>
+      </mat-expansion-panel>
+
+    </mat-card>
+
+  <app-map></app-map>
+
+</div>
