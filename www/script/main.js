@@ -104,7 +104,6 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
             // console.log($('#startAddress').val());
             // console.log($('#endAddress').val());
             directionsDisplay.setDirections(response);
-
         } else {
             console.log('insuccess');
             console.log($('#startAddress').val());
@@ -209,8 +208,11 @@ $('#output').on('contextmenu', 'dt', function () {
 function deleteDirection(id) {
 
     $.ajax({
-        url: "http://localhost:8080/users/" + $userID + "coordinates/" + id,
+        url: "http://localhost:8080/users/" + $userID + "/coordinates/" + id,
         type: 'DELETE',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", $token);
+        },
         success: function () {
             setOutput();
         },

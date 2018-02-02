@@ -28,7 +28,7 @@ The request JSON will look like:
 
         {
                 "username" : "example username",
-                "username" : "example password"
+                "password" : "example password"
         }
 
 To receive an authentication token (JWT), use the following path with valid credentials that were used above during registration process:
@@ -39,7 +39,7 @@ The request JSON will look like:
 
         {
                 "username" : "example username",
-                "username" : "example password"
+                "password" : "example password"
         }
 
 For further usage, the user will need to be authentificated. He will get an Authentification token in the response headers, that will be used for future requests. Also an UserID costum will be received, that will be used in future requests path.
