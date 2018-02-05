@@ -23,3 +23,43 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+example-api-cons/dist
+example-api-cons/dist-server
+example-api-cons/tmp
+example-api-cons/out-tsc
+
+# dependencies
+example-api-cons/node_modules
+
+# IDEs and editors
+example-api-cons/.idea
+example-api-cons/.project
+example-api-cons/.classpath
+example-api-cons/.c9/
+example-api-cons/*.launch
+example-api-cons/.settings/
+example-api-cons/*.sublime-workspace
+
+
+# misc
+example-api-cons/.sass-cache
+example-api-cons/connect.lock
+example-api-cons/coverage
+example-api-cons/libpeerconnection.log
+example-api-cons/npm-debug.log
+example-api-cons/testem.log
+example-api-cons/typings
+
+# e2e
+#example-api-cons/e2e/*.js
+#example-api-cons/e2e/*.map
+
+# System Files
+example-api-cons/.DS_Store
+example-api-cons/Thumbs.db
+
+#GIT
+example-api-cons/.gitignore

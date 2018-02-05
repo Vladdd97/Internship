@@ -106,9 +106,14 @@ public class CoordinateController {
 
     }
 
-    @GetMapping("/availableRoutes")
+    @GetMapping("/availableAllRoutes")
     public List<Coordinate> getAvailableRoutes() {
         return CoordinateService.getAvailableRoutes(coordinateRepository.findAll());
+    }
+
+    @GetMapping("/availableRoutes")
+    public List<Coordinate> getAvailableRoutesByUID(@PathVariable(value="applicationUserId") Long aui) {
+        return CoordinateService.getAvailableRoutes(coordinateRepository.findAllByApplicationUserId(aui));
     }
 
     @GetMapping("/sameRoutes/{index}")

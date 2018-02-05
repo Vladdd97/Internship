@@ -4,16 +4,16 @@
     <div class="spacer"></div>
     <a [routerLink]="['/login']" class="btn btn-primary">Logout</a>
   </mat-toolbar>
-
-    <mat-card class="external-card">
-
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>Your directions, {{user}}.</mat-expansion-panel-header>
-        <mat-card *ngFor="let coordinate of coordinates" (click)="setMapDirection($event, coordinate)">
+  <mat-card class="external-card">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>Your directions, {{user}}.</mat-expansion-panel-header>
+      <mat-card *ngFor="let coordinate of coordinates"
+                (click)="setMapDirection($event, coordinate);$event.stopPropagation()">
         <b>From </b> {{coordinate.addressStart}}
         <p></p>
         <b> to </b> {{coordinate.addressEnd}}
-
+        <p></p>
+        <b>Expires </b> {{calculateTime(coordinate.endTime)}}
         <mat-card-actions align="right">
           <mat-icon (click)="update($event, coordinate); $event.stopPropagation()">
             mode_edit
@@ -24,10 +24,46 @@
           </mat-icon>
         </mat-card-actions>
       </mat-card>
-      </mat-expansion-panel>
-
-    </mat-card>
-
+    </mat-expansion-panel>
+    <mat-card-actions align="right">
+      Add new
+      <div class="spacer"></div>
+      <mat-icon (click)="addNew($event); $event.stopPropagation()">add</mat-icon>
+    </mat-card-actions>
+  </mat-card>
   <app-map></app-map>
+  <!--<mat-horizontal-stepper [linear]="true">-->
+    <!--<mat-step [stepControl]="firstFormGroup">-->
+      <!--<form [formGroup]="firstFormGroup">-->
+        <!--<ng-template matStepLabel>Fill out your name</ng-template>-->
+        <!--<mat-form-field>-->
+          <!--<input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>-->
+        <!--</mat-form-field>-->
+        <!--<div>-->
+          <!--<button mat-button matStepperNext>Next</button>-->
+        <!--</div>-->
+      <!--</form>-->
+    <!--</mat-step>-->
+    <!--<mat-step [stepControl]="secondFormGroup">-->
+      <!--<form [formGroup]="secondFormGroup">-->
+        <!--<ng-template matStepLabel>Fill out your address</ng-template>-->
+        <!--<mat-form-field>-->
+          <!--<input matInput placeholder="Address" formControlName="secondCtrl" required>-->
+        <!--</mat-form-field>-->
+        <!--<div>-->
+          <!--<button mat-button matStepperPrevious>Back</button>-->
+          <!--<button mat-button matStepperNext>Next</button>-->
+        <!--</div>-->
+      <!--</form>-->
+    <!--</mat-step>-->
+    <!--<mat-step>-->
+      <!--<ng-template matStepLabel>Done</ng-template>-->
+      <!--You are now done.-->
+      <!--<div>-->
+        <!--<button mat-button matStepperPrevious>Back</button>-->
+      <!--</div>-->
+    <!--</mat-step>-->
+  <!--</mat-horizontal-stepper>-->
 
+  <button mat-raised-button color="primary" (click)="sendRequest()">Send Request</button>
 </div>

@@ -10,8 +10,8 @@ import {Coordinate} from '../../_models/coordinate';
 export class AlertComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<AlertComponent>,
-              @Inject(MAT_DIALOG_DATA) public coordinate: Coordinate) {
-    console.log(coordinate);
+              @Inject(MAT_DIALOG_DATA) public data: any) {
+    console.log(data);
   }
 
   ngOnInit() {
@@ -21,7 +21,8 @@ export class AlertComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  returnCoordinate() {
-    return this.coordinate;
+  returnCoordinate(): Coordinate {
+    console.log('returnCoordinate()');
+    return this.data;
   }
 }

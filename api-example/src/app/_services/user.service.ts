@@ -20,7 +20,7 @@ export class UserService implements OnInit {
 
   getAll() {
     this.uid = JSON.parse(localStorage.getItem('currentUserID')).userID;
-    return this.http.get<Coordinate[]>(this.url + '/users/' + this.uid + '/coordinates');
+    return this.http.get<Coordinate[]>(this.url + '/users/' + this.uid + '/availableAllRoutes');
   }
 
   update(id, body) {

@@ -47,6 +47,10 @@ export class HomeComponent implements OnInit {
     this.openDialog(coordinate);
   }
 
+  addNew() {
+    console.log('Add new coordinate');
+  }
+
   openDialog(data) {
     const dialogRef = this.dialog.open(AlertComponent, {
       width: '250px',
@@ -60,7 +64,14 @@ export class HomeComponent implements OnInit {
   }
 
   setMapDirection(e, coordinate) {
-    this.maps.setMapDirection(coordinate);
+    const startPoint = coordinate.coordinateStart.split(':');
+    const endPoint = coordinate.coordinateEnd.split(':');
+    this.maps.setMapDirection(startPoint, endPoint);
+  }
+
+  calculateTime(endTime) {
+    const time = new Date(Number(endTime));
+    return time.toDateString();
   }
 
 }

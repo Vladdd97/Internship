@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -41,6 +42,9 @@ public class Coordinate {
 
     @NotBlank
     private String routeDistance;
+
+    @NotNull
+    private boolean isForDriver;
 
     public Long getId() {
         return id;
@@ -120,5 +124,13 @@ public class Coordinate {
 
     public void setApplicationUser(ApplicationUser applicationUser) {
         this.applicationUser = applicationUser;
+    }
+
+    public boolean isForDriver() {
+        return isForDriver;
+    }
+
+    public void setForDriver(boolean forDriver) {
+        isForDriver = forDriver;
     }
 }

@@ -25,6 +25,7 @@ import { MatButtonModule, MatToolbarModule, MatIconModule, MatCardModule, MatExp
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material';
 import { MatInputModule} from '@angular/material';
+import { MatStepperModule } from '@angular/material/stepper';
 
 // ------------------- Google MAPS ------------------------- //
 // import { AgmCoreModule } from '@agm/core';
@@ -54,6 +55,7 @@ import { MatInputModule} from '@angular/material';
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
+    MatStepperModule
     // AgmCoreModule.forRoot({
     //   apiKey: 'AIzaSyArZHrPHDbBfM5rWlbWFcbGTrTptyAeUz0'
     // }),
