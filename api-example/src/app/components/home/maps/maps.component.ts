@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 declare let google: any;
 
@@ -12,12 +13,28 @@ export class MapsComponent implements OnInit {
   private directionsService;
   private directionsDisplay;
   private markers: any[] = [];
+  coordinate: any = {
+    addressStart: '',
+    addressEnd: '',
+  };
+  firstFormGroup: FormGroup;
+  secondFormGroup: FormGroup;
 
-  constructor() {
+  constructor(private _formBuilder: FormBuilder) {
   }
 
   ngOnInit() {
     this.mapInit();
+    this.stepperInit();
+  }
+
+  stepperInit() {
+    this.firstFormGroup = this._formBuilder.group({
+      firstCtrl: ['', Validators.required]
+    });
+    this.secondFormGroup = this._formBuilder.group({
+      secondCtrl: ['', Validators.required]
+    });
   }
 
   mapInit() {
@@ -38,7 +55,6 @@ export class MapsComponent implements OnInit {
     });
     return this.map;
   }
-
 
   setMapDirection(startPoint, endPoint) {
     // got our coordinates object start and end points
@@ -67,14 +83,14 @@ export class MapsComponent implements OnInit {
   }
 
   addNewMarker(lat, lng) {
-
-      const marker = new google.maps.Marker({
-        position: new google.maps.LatLng(lat, lng),
-        map: this.map,
-        animation: google.maps.Animation.BOUNCE
-      });
-      this.markers.push(marker);
-      this.addAllMarkersOnMap(this.map);
+    const marker = new google.maps.Marker({
+      position: new google.maps.LatLng(lat, lng),
+      map: this.map,
+      animation: google.maps.Animation.BOUNCE
+    });
+    this.markers.push(marker);
+    this.addAllMarkersOnMap(this.map);
+    this.geocodePosition(marker);
     if (this.markers.length > 1) {
       console.log(this.markers[0].getPosition().lat());
       console.log(this.markers[0].getPosition().lng());
@@ -84,7 +100,6 @@ export class MapsComponent implements OnInit {
         [this.markers[0].getPosition().lng(), this.markers[0].getPosition().lat()],
         [this.markers[1].getPosition().lng(), this.markers[1].getPosition().lat()]);
       this.clearMarkers();
-
     }
   }
 
@@ -99,4 +114,40 @@ export class MapsComponent implements OnInit {
     this.markers = [];
   }
 
+  geocodePosition(marker) {
+    const geocoder = new google.maps.Geocoder();
+    let address = '';
+    geocoder.geocode({
+      latLng: marker.getPosition()
+    }, function (response) {
+      if (response && response.length > 0) {
+        address = response[0].formatted_address;
+        console.log(address);
+      }
+    });
+    if (this.markers.length === 1) {
+      this.coordinate.addressStart = address;
+    }
+    if (this.markers.length === 2) {
+      this.coordinate.addressEnd = address;
+    }
+  }
+
+  sendRequest() {
+
+    this.coordinate.startTime = new Date().getTime();
+    this.coordinate.endTime = this.coordinate.startTime + this.coordinate.lifeTime * 60 * 1000;
+
+    console.log(this.coordinate);
+    // this.userService.createCoordinate(this.coordinate)
+    //   .subscribe(
+    //     data => {
+    //       console.log('Sent!');
+    //       console.log(data);
+    //     },
+    //     error => {
+    //       console.error(error.status);
+    //     });
+
+  }
 }

@@ -37,12 +37,6 @@ public class Coordinate {
     @NotBlank
     private String endTime;
 
-    @NotBlank
-    private String lifeTime;
-
-    @NotBlank
-    private String routeDistance;
-
     @NotNull
     private boolean isForDriver;
 
@@ -100,22 +94,6 @@ public class Coordinate {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
-    }
-
-    public String getLifeTime() {
-        return lifeTime;
-    }
-
-    public void setLifeTime(String lifeTime) {
-        this.lifeTime = lifeTime;
-    }
-
-    public String getRouteDistance() {
-        return routeDistance;
-    }
-
-    public void setRouteDistance(String routeDistance) {
-        this.routeDistance = routeDistance;
     }
 
     public ApplicationUser getApplicationUser() {

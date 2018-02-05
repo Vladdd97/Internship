@@ -4,6 +4,7 @@ import {UserService} from '../../_services/user.service';
 import {MapsComponent} from './maps/maps.component';
 import {AlertComponent} from '../alert/alert.component';
 import {MatDialog} from '@angular/material';
+import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +15,7 @@ export class HomeComponent implements OnInit {
   coordinates: Coordinate[] = [];
   user: string;
 
+
   constructor(private userService: UserService,
               private maps: MapsComponent,
               public dialog: MatDialog) {
@@ -22,10 +24,11 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem('currentUsername')).username;
     this.showAll();
+
   }
 
   showAll() {
-    this.userService.getAll()
+    this.userService.getAllUnexpired()
       .subscribe(data => {
           this.coordinates = data;
         }, error =>

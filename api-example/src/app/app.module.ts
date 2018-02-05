@@ -16,7 +16,7 @@ import { AuthInterceptor} from './_interceptors/auth.service';
 import { routing } from './app.routing';
 
 // ------------------ OTHER IMPORTS --------------------- //
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 
 // ------------------- MAT DESIGN IMPORTS ------------------------- //
@@ -25,11 +25,9 @@ import { MatButtonModule, MatToolbarModule, MatIconModule, MatCardModule, MatExp
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material';
 import { MatInputModule} from '@angular/material';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepperModule,  } from '@angular/material/stepper';
+import { MatSelectModule } from '@angular/material/select';
 
-// ------------------- Google MAPS ------------------------- //
-// import { AgmCoreModule } from '@agm/core';
-// import { AgmDirectionModule } from 'agm-direction';
 
 
 @NgModule({
@@ -55,11 +53,9 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatStepperModule
-    // AgmCoreModule.forRoot({
-    //   apiKey: 'AIzaSyArZHrPHDbBfM5rWlbWFcbGTrTptyAeUz0'
-    // }),
-    // AgmDirectionModule
+    MatStepperModule,
+    ReactiveFormsModule,
+    MatSelectModule
   ],
   entryComponents: [AlertComponent],
   providers: [

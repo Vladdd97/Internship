@@ -24,6 +24,10 @@ mat-toolbar{
   width: 100%
 }
 
+mat-horizontal-stepper{
+  width: 600px;
+}
+
 .spacer {
   flex: 1 1 auto;
 }

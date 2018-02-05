@@ -1,1 +1,44 @@
 <div id="map"></div>
+
+<mat-horizontal-stepper [linear]="true">
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Choose your start and end point on the map</ng-template>
+      <!--From {{coordinate.addressStart}} to {{coordinate.addressEnd}}-->
+      <mat-form-field>
+        <input matInput placeholder="Start point" [(ngModel)]="coordinate.addressStart" formControlName="firstCtrl" required>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="End point" [(ngModel)]="coordinate.addressEnd" formControlName="firstCtrl" required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Choose expiration time</ng-template>
+      <mat-form-field>
+        <mat-select [(value)]="coordinate.lifeTime" formControlName="secondCtrl" required>
+          <mat-option value="5">5 min</mat-option>
+          <mat-option value="15">15 min</mat-option>
+          <mat-option value="30">30 min</mat-option>
+          <mat-option value="60">60 min</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    You are now done.
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-raised-button color="primary" (click)="sendRequest()">Send Request</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

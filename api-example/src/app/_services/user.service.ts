@@ -2,7 +2,6 @@ import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {AuthenticationService} from './authentication.service';
 import {Coordinate} from '../_models/coordinate';
-import {Observable} from 'rxjs/Observable';
 
 import 'rxjs/add/operator/map';
 import {User} from '../_models/user';
@@ -18,9 +17,14 @@ export class UserService implements OnInit {
   ngOnInit(): void {
   }
 
-  getAll() {
+  getAllUnexpired() {
     this.uid = JSON.parse(localStorage.getItem('currentUserID')).userID;
     return this.http.get<Coordinate[]>(this.url + '/users/' + this.uid + '/availableAllRoutes');
+  }
+
+  getAll() {
+    this.uid = JSON.parse(localStorage.getItem('currentUserID')).userID;
+    return this.http.get<Coordinate[]>(this.url + '/users/' + this.uid + '/coordinates');
   }
 
   update(id, body) {
@@ -36,9 +40,17 @@ export class UserService implements OnInit {
   }
 
   create(user: User) {
-    return this.http.post(this.url + '/users/sign-up', user,   {
+    return this.http.post(this.url + '/users/sign-up', user, {
       headers: new HttpHeaders().set('Content-Type', 'application/json'),
       responseType: 'text'
+    });
+  }
+
+  createCoordinate(coordinate: Coordinate) {
+    console.log('this is create coord');
+    this.uid = JSON.parse(localStorage.getItem('currentUserID')).userID;
+    return this.http.post(this.url + '/users/' + this.uid + '/coordinates', coordinate, {
+      headers: new HttpHeaders().set('Content-Type', 'application/json'),
     });
   }
 
