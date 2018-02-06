@@ -9,9 +9,9 @@
   </mat-toolbar>
   <mat-card class="external-card">
     <mat-expansion-panel>
-      <mat-expansion-panel-header>Manage your directions, {{user}}.</mat-expansion-panel-header>
+      <mat-expansion-panel-header>{{user}}, manage your directions as a {{state}}.</mat-expansion-panel-header>
       <mat-slide-toggle [checked]="toggle" (change)="showAll()">Toggle to show / hide expired</mat-slide-toggle>
-      <mat-card *ngFor="let coordinate of coordinates">
+      <mat-card *ngFor="let coordinate of filterCoordinatesByState()" (click)="showToConosole(coordinate)">
         <!--(click)="setMapDirection($event, coordinate);$event.stopPropagation()">-->
         <b>From </b> {{coordinate.addressStart}}
         <p></p>

@@ -59,6 +59,10 @@ export class HomeComponent implements OnInit {
 
   }
 
+  showToConosole(text) {
+    console.log(text);
+  }
+
   delete(e, id) {
     this.userService.delete(id)
       .subscribe(data => {
@@ -79,7 +83,6 @@ export class HomeComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
       this.userService.update(result.data.id, result.data)
         .subscribe(dat =>
             this.showAll(),
@@ -91,6 +94,11 @@ export class HomeComponent implements OnInit {
   calculateTime(endTime) {
     const time = new Date(Number(endTime));
     return time.toDateString();
+  }
+
+  filterCoordinatesByState() {
+    return this.coordinates
+      .filter(coordinate => coordinate.forDriver === (this.state === 'driver'));
   }
 
 }

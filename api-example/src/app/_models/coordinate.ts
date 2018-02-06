@@ -6,5 +6,5 @@ export class Coordinate {
   coordinateEnd: string;
   startTime: string;
   endTime: string;
-  isForDriver: boolean;
+  forDriver: boolean;
 }

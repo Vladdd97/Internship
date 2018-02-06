@@ -63,7 +63,7 @@ export class StepperComponent implements OnInit, OnChanges {
   sendRequest() {
     this.coordinate.startTime = new Date().getTime();
     this.coordinate.endTime = this.coordinate.startTime + this.coordinate.lifeTime * 60 * 1000;
-    this.coordinate.isForDriver = this.state === 'driver';
+    this.coordinate.forDriver = this.state === 'driver';
     console.log(this.coordinate);
     this.userService.createCoordinate(this.coordinate)
       .subscribe(data => {
