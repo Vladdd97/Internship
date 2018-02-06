@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../../_services/user/user.service';
 import {StepperService} from '../../../_services/stepper/stepper.service';
@@ -9,10 +9,11 @@ import {MapsComponent} from '../maps/maps.component';
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.css']
 })
-export class StepperComponent implements OnInit {
+export class StepperComponent implements OnInit, OnChanges {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   coordinate: any = {};
+  @Input() state;
   @ViewChild('coordinate.addressStart') addressStart;
   @ViewChild('coordinate.addressEnd') addressEnd;
   @ViewChild('stepper') stepper;
@@ -44,6 +45,11 @@ export class StepperComponent implements OnInit {
       );
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['state']) {
+    }
+  }
+
   stepperInit() {
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ['', Validators.required],
@@ -57,9 +63,10 @@ export class StepperComponent implements OnInit {
   sendRequest() {
     this.coordinate.startTime = new Date().getTime();
     this.coordinate.endTime = this.coordinate.startTime + this.coordinate.lifeTime * 60 * 1000;
+    this.coordinate.isForDriver = this.state === 'driver';
+    console.log(this.coordinate);
     this.userService.createCoordinate(this.coordinate)
-      .subscribe(
-        data => {
+      .subscribe(data => {
           this.clearValues();
         },
         error => {

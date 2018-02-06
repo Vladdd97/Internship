@@ -19,7 +19,7 @@ export class UserService implements OnInit {
 
   getAllUnexpired() {
     this.uid = JSON.parse(localStorage.getItem('currentUserID')).userID;
-    return this.http.get<Coordinate[]>(this.url + '/users/' + this.uid + '/availableRoutes');
+    return this.http.get<Coordinate[]>(this.url + '/users/' + this.uid + '/availablePersonalRoutes');
   }
 
   getAll() {

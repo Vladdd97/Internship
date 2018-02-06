@@ -38,11 +38,11 @@ export class MapsComponent implements OnInit {
     return this.map;
   }
 
-  setMapDirection(startPoint, endPoint) {
+  setMapDirection(startPoint, endPoint, map) {
 
     this.directionsService = new google.maps.DirectionsService;
     this.directionsDisplay = new google.maps.DirectionsRenderer;
-    this.directionsDisplay.setMap(this.mapInit());
+    this.directionsDisplay.setMap(map);
     calculateAndDisplayRoute(this.directionsService, this.directionsDisplay);
 
     function calculateAndDisplayRoute(directionsService, directionsDisplay) {
@@ -80,7 +80,7 @@ export class MapsComponent implements OnInit {
     if (this.markers.length > 1) {
       this.setMapDirection(
         [this.markers[0].getPosition().lng(), this.markers[0].getPosition().lat()],
-        [this.markers[1].getPosition().lng(), this.markers[1].getPosition().lat()]);
+        [this.markers[1].getPosition().lng(), this.markers[1].getPosition().lat()], this.mapInit());
       this.clearMarkers();
     }
   }
@@ -94,7 +94,6 @@ export class MapsComponent implements OnInit {
   clearMarkers() {
     this.addAllMarkersOnMap(null);
     this.markers = [];
-
   }
 
   geocodePosition(marker) {

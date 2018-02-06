@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Coordinate} from '../../_models/coordinate';
 import {UserService} from '../../_services/user/user.service';
 import {MapsComponent} from './maps/maps.component';
@@ -12,13 +12,19 @@ import {MatDialog} from '@angular/material';
 })
 export class HomeComponent implements OnInit {
   coordinates: Coordinate[] = [];
-  user: string;
-  state = ['passenger', 'driver'];
-  i = 0;
+  private user: string;
+  private states = ['passenger', 'driver'];
+  private statesOffReq = ['offers', 'requests'];
+  private i;
+  private offReq;
+  private toggle: boolean;
+  @Output() state;
 
   constructor(private userService: UserService,
-              private maps: MapsComponent,
               public dialog: MatDialog) {
+    this.i = 0;
+    this.state = this.states[this.i];
+    this.offReq = this.statesOffReq[this.i];
   }
 
   ngOnInit() {
@@ -28,15 +34,29 @@ export class HomeComponent implements OnInit {
 
   switch() {
     this.i === 0 ? this.i++ : this.i--;
+    this.state = this.states[this.i];
+    this.offReq = this.statesOffReq[this.i];
   }
 
   showAll() {
-    this.userService.getAllUnexpired()
-      .subscribe(data => {
-          this.coordinates = data;
-        }, error =>
-          console.error(error)
-      );
+    if (!this.toggle) {
+      this.toggle = !this.toggle;
+      this.userService.getAllUnexpired()
+        .subscribe(data => {
+            this.coordinates = data;
+          }, error =>
+            console.error(error)
+        );
+    } else {
+      this.toggle = !this.toggle;
+      this.userService.getAll()
+        .subscribe(data => {
+            this.coordinates = data;
+          }, error =>
+            console.error(error)
+        );
+    }
+
   }
 
   delete(e, id) {
@@ -67,12 +87,6 @@ export class HomeComponent implements OnInit {
             console.log(error));
     });
   }
-
-  // setMapDirection(e, coordinate) {
-  //   const startPoint = coordinate.coordinateStart.split(':');
-  //   const endPoint = coordinate.coordinateEnd.split(':');
-  //   this.maps.setMapDirection(startPoint, endPoint);
-  // }
 
   calculateTime(endTime) {
     const time = new Date(Number(endTime));

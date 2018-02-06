@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface CoordinateRepository extends JpaRepository<Coordinate, Long> {
     List<Coordinate> findAllByApplicationUserId(Long ApplicationUserId);
-    List<Coordinate> findAllByApplicationUserAndForDriverIsTrue(Long ApplicationUserId);
+    //List<Coordinate> findAllByApplicationUserAndForDriverIsTrue(Long ApplicationUserId);
 }

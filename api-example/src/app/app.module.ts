@@ -30,6 +30,7 @@ import { MatInputModule} from '@angular/material';
 import { MatStepperModule,  } from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 
@@ -62,6 +63,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     ReactiveFormsModule,
     MatSelectModule,
     MatButtonToggleModule,
+    MatSlideToggleModule
   ],
   entryComponents: [AlertComponent],
   providers: [

@@ -2,16 +2,17 @@
   <mat-toolbar color="primary">
     Welcome {{user}}!
     <div class="spacer"></div>
-    Today you're a {{state[i]}}
+    Today you're a {{states[i]}}
     <div class="spacer"></div>
     <a class="btn btn-default" (click)="switch()"> Switch</a>
     <a [routerLink]="['/login']" class="btn btn-primary">Logout</a>
   </mat-toolbar>
   <mat-card class="external-card">
     <mat-expansion-panel>
-      <mat-expansion-panel-header>Your directions, {{user}}.</mat-expansion-panel-header>
+      <mat-expansion-panel-header>Manage your directions, {{user}}.</mat-expansion-panel-header>
+      <mat-slide-toggle [checked]="toggle" (change)="showAll()">Toggle to show / hide expired</mat-slide-toggle>
       <mat-card *ngFor="let coordinate of coordinates">
-                <!--(click)="setMapDirection($event, coordinate);$event.stopPropagation()">-->
+        <!--(click)="setMapDirection($event, coordinate);$event.stopPropagation()">-->
         <b>From </b> {{coordinate.addressStart}}
         <p></p>
         <b> to </b> {{coordinate.addressEnd}}
@@ -28,8 +29,14 @@
         </mat-card-actions>
       </mat-card>
     </mat-expansion-panel>
+
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>Look for {{offReq}}</mat-expansion-panel-header>
+    </mat-expansion-panel>
+
+
   </mat-card>
   <app-map></app-map>
-  <app-stepper></app-stepper>
-
+  <app-stepper [state]="state"></app-stepper>
 </div>
