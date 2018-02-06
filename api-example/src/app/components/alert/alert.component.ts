@@ -11,7 +11,6 @@ export class AlertComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<AlertComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) {
-    console.log(data);
   }
 
   ngOnInit() {
@@ -22,7 +21,7 @@ export class AlertComponent implements OnInit {
   }
 
   returnCoordinate(): Coordinate {
-    console.log('returnCoordinate()');
+    // REMINDER: change the coordinates with the address name
     return this.data;
   }
 }

@@ -10,8 +10,8 @@
   <mat-card class="external-card">
     <mat-expansion-panel>
       <mat-expansion-panel-header>Your directions, {{user}}.</mat-expansion-panel-header>
-      <mat-card *ngFor="let coordinate of coordinates"
-                (click)="setMapDirection($event, coordinate);$event.stopPropagation()">
+      <mat-card *ngFor="let coordinate of coordinates">
+                <!--(click)="setMapDirection($event, coordinate);$event.stopPropagation()">-->
         <b>From </b> {{coordinate.addressStart}}
         <p></p>
         <b> to </b> {{coordinate.addressEnd}}
@@ -30,5 +30,6 @@
     </mat-expansion-panel>
   </mat-card>
   <app-map></app-map>
+  <app-stepper></app-stepper>
 
 </div>

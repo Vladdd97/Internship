@@ -8,9 +8,11 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { MapsComponent } from './components/home/maps/maps.component';
 import { AlertComponent } from './components/alert/alert.component';
+import { StepperComponent } from './components/home/stepper/stepper.component';
+import { StepperService } from './_services/stepper/stepper.service';
 
-import { AuthenticationService } from './_services/authentication.service';
-import { UserService } from './_services/user.service';
+import { AuthenticationService } from './_services/authentification/authentication.service';
+import { UserService } from './_services/user/user.service';
 import { AuthGuard } from './_guards/auth.guard';
 import { AuthInterceptor} from './_interceptors/auth.service';
 import { routing } from './app.routing';
@@ -31,6 +33,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,6 +42,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     RegisterComponent,
     MapsComponent,
     AlertComponent,
+    StepperComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +70,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     AuthGuard,
     AuthenticationService,
     UserService,
+    StepperComponent,
+    StepperService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

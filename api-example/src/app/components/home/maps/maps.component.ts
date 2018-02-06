@@ -1,7 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable} from 'rxjs/Observable';
-import {UserService} from '../../../_services/user.service';
+import {UserService} from '../../../_services/user/user.service';
+import {StepperComponent} from '../stepper/stepper.component';
+import {StepperService} from '../../../_services/stepper/stepper.service';
 
 declare let google: any;
 
@@ -15,33 +17,13 @@ export class MapsComponent implements OnInit {
   private directionsService;
   private directionsDisplay;
   private markers: any[] = [];
-  coordinate: any = {};
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
-  @ViewChild('coordinate.addressStart')
-  addressStart;
-  @ViewChild('coordinate.addressEnd')
-  addressEnd;
 
-  constructor(private _formBuilder: FormBuilder,
-              private userService: UserService) {
+  constructor(private stepperService: StepperService) {
 
   }
 
   ngOnInit() {
     this.mapInit();
-    this.stepperInit();
-  }
-
-  stepperInit() {
-
-    this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required],
-      firstCtrl2: ['', Validators.required]
-    });
-    this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required]
-    });
   }
 
   mapInit() {
@@ -88,16 +70,11 @@ export class MapsComponent implements OnInit {
     this.addAllMarkersOnMap(this.map);
     this.geocodePosition(marker)
       .subscribe(event => {
-        //populate address start, end and coordinates start, end
+        // populate address start, end and coordinates start, end
         if (this.markers.length === 1) {
-          this.coordinate.addressStart = event;
-          this.addressStart.nativeElement.value = event;
-          this.coordinate.coordinateStart = marker.getPosition().lng() + ':' + marker.getPosition().lat();
-
+          this.stepperService.setCoordinatesStart(event, marker.getPosition().lng() + ':' + marker.getPosition().lat());
         } else {
-          this.coordinate.addressEnd = event;
-          this.addressEnd.nativeElement.value = event;
-          this.coordinate.coordinateEnd = marker.getPosition().lng() + ':' + marker.getPosition().lat();
+          this.stepperService.setCoordinatesEnd(event, marker.getPosition().lng() + ':' + marker.getPosition().lat());
         }
       });
     if (this.markers.length > 1) {
@@ -137,19 +114,4 @@ export class MapsComponent implements OnInit {
       });
     });
   }
-
-  sendRequest() {
-    this.coordinate.startTime = new Date().getTime();
-    this.coordinate.endTime = this.coordinate.startTime + this.coordinate.lifeTime * 60 * 1000;
-    this.userService.createCoordinate(this.coordinate)
-      .subscribe(
-        data => {
-          console.log('Sent!');
-        },
-        error => {
-          console.error(error.status);
-        });
-
-  }
-
 }

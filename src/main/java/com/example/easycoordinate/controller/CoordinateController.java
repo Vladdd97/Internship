@@ -78,7 +78,7 @@ public class CoordinateController {
         ApplicationUser user = applicationUserRepository.getApplicationUserById(aui);
         if (user != null && user.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal())) {
             coordinate.setAddressStart(coordinateDetails.getAddressStart());
-            coordinate.setAddressStart(coordinateDetails.getAddressEnd());
+            coordinate.setAddressEnd(coordinateDetails.getAddressEnd());
             coordinate.setCoordinateStart(coordinateDetails.getCoordinateStart());
             coordinate.setCoordinateEnd(coordinateDetails.getCoordinateEnd());
             Coordinate updatedCoordinate = coordinateRepository.save(coordinate);
@@ -106,12 +106,14 @@ public class CoordinateController {
 
     }
 
+    // path to get all the available routes
     @GetMapping("/availableAllRoutes")
     public List<Coordinate> getAvailableRoutes() {
         return CoordinateService.getAvailableRoutes(coordinateRepository.findAll());
     }
 
-    @GetMapping("/availableRoutes")
+    // path to get personal routes, specific for an user
+    @GetMapping("/availablePersonalRoutes")
     public List<Coordinate> getAvailableRoutesByUID(@PathVariable(value="applicationUserId") Long aui) {
         return CoordinateService.getAvailableRoutes(coordinateRepository.findAllByApplicationUserId(aui));
     }

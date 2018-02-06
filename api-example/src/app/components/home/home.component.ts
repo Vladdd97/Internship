@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Coordinate} from '../../_models/coordinate';
-import {UserService} from '../../_services/user.service';
+import {UserService} from '../../_services/user/user.service';
 import {MapsComponent} from './maps/maps.component';
 import {AlertComponent} from '../alert/alert.component';
 import {MatDialog} from '@angular/material';
@@ -13,7 +13,8 @@ import {MatDialog} from '@angular/material';
 export class HomeComponent implements OnInit {
   coordinates: Coordinate[] = [];
   user: string;
-  state = ['passenger', 'driver']; i = 0;
+  state = ['passenger', 'driver'];
+  i = 0;
 
   constructor(private userService: UserService,
               private maps: MapsComponent,
@@ -24,6 +25,7 @@ export class HomeComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('currentUsername')).username;
     this.showAll();
   }
+
   switch() {
     this.i === 0 ? this.i++ : this.i--;
   }
@@ -47,31 +49,30 @@ export class HomeComponent implements OnInit {
   }
 
   update(e, coordinate) {
-    console.log('Update functionality!');
     this.openDialog(coordinate);
-  }
-
-  addNew() {
-    console.log('Add new coordinate');
   }
 
   openDialog(data) {
     const dialogRef = this.dialog.open(AlertComponent, {
-      width: '250px',
-      data: { data }
+      width: '350px',
+      data: {data}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      console.log(result);
+      this.userService.update(result.data.id, result.data)
+        .subscribe(dat =>
+            this.showAll(),
+          error =>
+            console.log(error));
     });
   }
 
-  setMapDirection(e, coordinate) {
-    const startPoint = coordinate.coordinateStart.split(':');
-    const endPoint = coordinate.coordinateEnd.split(':');
-    this.maps.setMapDirection(startPoint, endPoint);
-  }
+  // setMapDirection(e, coordinate) {
+  //   const startPoint = coordinate.coordinateStart.split(':');
+  //   const endPoint = coordinate.coordinateEnd.split(':');
+  //   this.maps.setMapDirection(startPoint, endPoint);
+  // }
 
   calculateTime(endTime) {
     const time = new Date(Number(endTime));

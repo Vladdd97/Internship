@@ -6,6 +6,5 @@ export class Coordinate {
   coordinateEnd: string;
   startTime: string;
   endTime: string;
-  lifeTime: string;
-  routeDistance: string;
+  isForDriver: boolean;
 }
