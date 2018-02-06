@@ -16,7 +16,7 @@ import { AuthInterceptor} from './_interceptors/auth.service';
 import { routing } from './app.routing';
 
 // ------------------ OTHER IMPORTS --------------------- //
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, Form } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 
 // ------------------- MAT DESIGN IMPORTS ------------------------- //
@@ -27,6 +27,7 @@ import { MatFormFieldModule } from '@angular/material';
 import { MatInputModule} from '@angular/material';
 import { MatStepperModule,  } from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 
 
@@ -55,7 +56,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatStepperModule,
     ReactiveFormsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatButtonToggleModule,
   ],
   entryComponents: [AlertComponent],
   providers: [

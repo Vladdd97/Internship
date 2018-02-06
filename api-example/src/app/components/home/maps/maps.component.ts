@@ -1,5 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Observable} from 'rxjs/Observable';
+import {UserService} from '../../../_services/user.service';
 
 declare let google: any;
 
@@ -13,14 +15,17 @@ export class MapsComponent implements OnInit {
   private directionsService;
   private directionsDisplay;
   private markers: any[] = [];
-  coordinate: any = {
-    addressStart: '',
-    addressEnd: '',
-  };
+  coordinate: any = {};
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
+  @ViewChild('coordinate.addressStart')
+  addressStart;
+  @ViewChild('coordinate.addressEnd')
+  addressEnd;
 
-  constructor(private _formBuilder: FormBuilder) {
+  constructor(private _formBuilder: FormBuilder,
+              private userService: UserService) {
+
   }
 
   ngOnInit() {
@@ -29,8 +34,10 @@ export class MapsComponent implements OnInit {
   }
 
   stepperInit() {
+
     this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required]
+      firstCtrl: ['', Validators.required],
+      firstCtrl2: ['', Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ['', Validators.required]
@@ -41,13 +48,6 @@ export class MapsComponent implements OnInit {
     this.map = new google.maps.Map(document.getElementById('map'), {
       zoom: 12,
       center: {lat: 47.00989485019684, lng: 28.840969763696194}
-      // scrollwheel: false,
-      // navigationControl: false,
-      // mapTypeControl: false,
-      // scaleControl: false,
-      // draggable: false,
-      // disableDoubleClickZoom: true,
-      // zoomControl: false,
     });
 
     this.map.addListener('click', e => {
@@ -57,11 +57,7 @@ export class MapsComponent implements OnInit {
   }
 
   setMapDirection(startPoint, endPoint) {
-    // got our coordinates object start and end points
-    // const startPoint = coordinate.coordinateStart.split(':');
-    // const endPoint = coordinate.coordinateEnd.split(':');
-    console.log(startPoint);
-    console.log(endPoint);
+
     this.directionsService = new google.maps.DirectionsService;
     this.directionsDisplay = new google.maps.DirectionsRenderer;
     this.directionsDisplay.setMap(this.mapInit());
@@ -90,12 +86,21 @@ export class MapsComponent implements OnInit {
     });
     this.markers.push(marker);
     this.addAllMarkersOnMap(this.map);
-    this.geocodePosition(marker);
+    this.geocodePosition(marker)
+      .subscribe(event => {
+        //populate address start, end and coordinates start, end
+        if (this.markers.length === 1) {
+          this.coordinate.addressStart = event;
+          this.addressStart.nativeElement.value = event;
+          this.coordinate.coordinateStart = marker.getPosition().lng() + ':' + marker.getPosition().lat();
+
+        } else {
+          this.coordinate.addressEnd = event;
+          this.addressEnd.nativeElement.value = event;
+          this.coordinate.coordinateEnd = marker.getPosition().lng() + ':' + marker.getPosition().lat();
+        }
+      });
     if (this.markers.length > 1) {
-      console.log(this.markers[0].getPosition().lat());
-      console.log(this.markers[0].getPosition().lng());
-      console.log(this.markers[1].getPosition().lat());
-      console.log(this.markers[1].getPosition().lng());
       this.setMapDirection(
         [this.markers[0].getPosition().lng(), this.markers[0].getPosition().lat()],
         [this.markers[1].getPosition().lng(), this.markers[1].getPosition().lat()]);
@@ -112,42 +117,39 @@ export class MapsComponent implements OnInit {
   clearMarkers() {
     this.addAllMarkersOnMap(null);
     this.markers = [];
+
   }
 
   geocodePosition(marker) {
     const geocoder = new google.maps.Geocoder();
-    let address = '';
-    geocoder.geocode({
-      latLng: marker.getPosition()
-    }, function (response) {
-      if (response && response.length > 0) {
-        address = response[0].formatted_address;
-        console.log(address);
-      }
+    return Observable.create(observer => {
+      geocoder.geocode({
+        latLng: marker.getPosition()
+      }, function (results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+          observer.next(results[0].formatted_address);
+          observer.complete();
+        } else {
+          console.log('Error - ', results, ' & Status - ', status);
+          observer.next({});
+          observer.complete();
+        }
+      });
     });
-    if (this.markers.length === 1) {
-      this.coordinate.addressStart = address;
-    }
-    if (this.markers.length === 2) {
-      this.coordinate.addressEnd = address;
-    }
   }
 
   sendRequest() {
-
     this.coordinate.startTime = new Date().getTime();
     this.coordinate.endTime = this.coordinate.startTime + this.coordinate.lifeTime * 60 * 1000;
-
-    console.log(this.coordinate);
-    // this.userService.createCoordinate(this.coordinate)
-    //   .subscribe(
-    //     data => {
-    //       console.log('Sent!');
-    //       console.log(data);
-    //     },
-    //     error => {
-    //       console.error(error.status);
-    //     });
+    this.userService.createCoordinate(this.coordinate)
+      .subscribe(
+        data => {
+          console.log('Sent!');
+        },
+        error => {
+          console.error(error.status);
+        });
 
   }
+
 }

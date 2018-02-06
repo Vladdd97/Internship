@@ -4,7 +4,6 @@ import {UserService} from '../../_services/user.service';
 import {MapsComponent} from './maps/maps.component';
 import {AlertComponent} from '../alert/alert.component';
 import {MatDialog} from '@angular/material';
-import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +13,7 @@ import {FormGroup} from '@angular/forms';
 export class HomeComponent implements OnInit {
   coordinates: Coordinate[] = [];
   user: string;
-
+  state = ['passenger', 'driver']; i = 0;
 
   constructor(private userService: UserService,
               private maps: MapsComponent,
@@ -24,7 +23,9 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem('currentUsername')).username;
     this.showAll();
-
+  }
+  switch() {
+    this.i === 0 ? this.i++ : this.i--;
   }
 
   showAll() {

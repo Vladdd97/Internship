@@ -1,15 +1,15 @@
-<div id="map"></div>
-
-<mat-horizontal-stepper [linear]="true">
+<div id="map">Loading . . .</div>
+<mat-horizontal-stepper [linear]="true" id="stepper">
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Choose your start and end point on the map</ng-template>
-      <!--From {{coordinate.addressStart}} to {{coordinate.addressEnd}}-->
       <mat-form-field>
-        <input matInput placeholder="Start point" [(ngModel)]="coordinate.addressStart" formControlName="firstCtrl" required>
+        <input #coordinate.addressStart matInput readonly [(ngModel)]="coordinate.addressStart"
+               formControlName="firstCtrl" required>
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="End point" [(ngModel)]="coordinate.addressEnd" formControlName="firstCtrl" required>
+        <input #coordinate.addressEnd matInput readonly [(ngModel)]="coordinate.addressEnd"
+               formControlName="firstCtrl2" required>
       </mat-form-field>
       <div>
         <button mat-button matStepperNext>Next</button>
