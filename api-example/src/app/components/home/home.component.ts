@@ -1,9 +1,9 @@
-import {Component, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, OnInit, Output, ViewChild} from '@angular/core';
 import {Coordinate} from '../../_models/coordinate';
 import {UserService} from '../../_services/user/user.service';
-import {MapsComponent} from './maps/maps.component';
 import {AlertComponent} from '../alert/alert.component';
 import {MatDialog} from '@angular/material';
+import {StepperService} from '../../_services/stepper/stepper.service';
 
 @Component({
   selector: 'app-home',
@@ -12,6 +12,7 @@ import {MatDialog} from '@angular/material';
 })
 export class HomeComponent implements OnInit {
   coordinates: Coordinate[] = [];
+  coordinatesRequests: Coordinate[] = [];
   private user: string;
   private states = ['passenger', 'driver'];
   private statesOffReq = ['offers', 'requests'];
@@ -19,17 +20,36 @@ export class HomeComponent implements OnInit {
   private offReq;
   private toggle: boolean;
   @Output() state;
+  coordinateSearch: any = {};
+  notFoundOrEmpty;
 
   constructor(private userService: UserService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private stepperService: StepperService) {
     this.i = 0;
     this.state = this.states[this.i];
     this.offReq = this.statesOffReq[this.i];
+    this.notFoundOrEmpty = false;
   }
 
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem('currentUsername')).username;
     this.showAll();
+
+    this.stepperService.getCoordinatesStart()
+      .subscribe(e => {
+          this.coordinateSearch.coordinateStart = e.newCoordinates;
+        }, error => {
+          console.log(error);
+        }
+      );
+    this.stepperService.getCoordinatesEnd()
+      .subscribe(e => {
+          this.coordinateSearch.coordinateEnd = e.newCoordinates;
+        }, error => {
+          console.log(error);
+        }
+      );
   }
 
   switch() {
@@ -41,7 +61,7 @@ export class HomeComponent implements OnInit {
   showAll() {
     if (!this.toggle) {
       this.toggle = !this.toggle;
-      this.userService.getAllUnexpired()
+      this.userService.getAllPersonalUnexpired()
         .subscribe(data => {
             this.coordinates = data;
           }, error =>
@@ -49,7 +69,7 @@ export class HomeComponent implements OnInit {
         );
     } else {
       this.toggle = !this.toggle;
-      this.userService.getAll()
+      this.userService.getAllPersonal()
         .subscribe(data => {
             this.coordinates = data;
           }, error =>
@@ -59,8 +79,27 @@ export class HomeComponent implements OnInit {
 
   }
 
-  showToConosole(text) {
-    console.log(text);
+  showToConsole(text) {
+    //console.log(text);
+  }
+
+  sendRequestToSearch() {
+    if ((this.coordinateSearch.coordinateStart !== undefined) && (this.coordinateSearch.coordinateStart !== undefined)) {
+      this.userService.getRoutesByRequest(this.coordinateSearch)
+        .subscribe(data => {
+            console.log(data);
+            this.coordinatesRequests = data;
+          }
+          , error => {
+            this.notFoundOrEmpty = true;
+            console.log(error);
+          }
+        );
+    } else {
+      this.notFoundOrEmpty = true;
+      console.log('some parameters might be missing');
+    }
+
   }
 
   delete(e, id) {
@@ -93,12 +132,18 @@ export class HomeComponent implements OnInit {
 
   calculateTime(endTime) {
     const time = new Date(Number(endTime));
-    return time.toDateString();
+    return time.toTimeString();
   }
 
-  filterCoordinatesByState() {
-    return this.coordinates
-      .filter(coordinate => coordinate.forDriver === (this.state === 'driver'));
+  filterCoordinatesByState(stateFilter) {
+    if (stateFilter) {
+      return this.coordinates
+        .filter(coordinate => coordinate.forDriver === (this.state === 'driver'));
+    } else {
+      return this.coordinatesRequests
+        .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
+    }
+
   }
 
 }

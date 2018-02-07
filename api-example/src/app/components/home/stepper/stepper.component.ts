@@ -2,7 +2,6 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@an
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../../_services/user/user.service';
 import {StepperService} from '../../../_services/stepper/stepper.service';
-import {MapsComponent} from '../maps/maps.component';
 
 @Component({
   selector: 'app-stepper',

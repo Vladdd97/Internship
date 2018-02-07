@@ -66,4 +66,31 @@ public class CoordinateService {
         return result;
     }
 
+    public static List<Coordinate> getSameRouteWithoutStoringObject(String startCoordinate, String endCoordinate, List<Coordinate> allRoutes) {
+        double radius = 1000f;
+        List<Coordinate> result = new ArrayList<>();
+        List<Coordinate> availableRoutes = getAvailableRoutes(allRoutes);
+        String[] startPointA = startCoordinate.split(":");
+        String[] endPointA = endCoordinate.split(":");
+
+        for(Coordinate coord : availableRoutes){
+            String[] startPointB = coord.getCoordinateStart().split(":");
+            String[] endPointB = coord.getCoordinateEnd().split(":");
+            double distanceX = CoordinateService.getDistance(
+                    Double.parseDouble(startPointA[0]),
+                    Double.parseDouble(startPointA[1]),
+                    Double.parseDouble(startPointB[0]),
+                    Double.parseDouble(startPointB[1]));
+            double distanceY = CoordinateService.getDistance(
+                    Double.parseDouble(endPointA[0]),
+                    Double.parseDouble(endPointA[1]),
+                    Double.parseDouble(endPointB[0]),
+                    Double.parseDouble(endPointB[1]));
+            if ( distanceX < radius && distanceY < radius )
+                result.add(coord);
+        }
+
+        return result;
+    }
+
 }

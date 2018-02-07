@@ -32,6 +32,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<ApplicationUser> login(@RequestBody String username, String password) {
+        System.out.println("username " + username);
         ApplicationUser u = userRepository.findByUsername(username);
         if (u == null) {
             return ResponseEntity.notFound().build();

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @RestController
@@ -65,6 +66,7 @@ public class CoordinateController {
 
     }
 
+
     @PutMapping("/coordinates/{id}")
     public ResponseEntity<Coordinate> updateCoordinate(@PathVariable(value = "applicationUserId") Long aui,
                                                        @PathVariable(value = "id") Long coordId,
@@ -114,7 +116,7 @@ public class CoordinateController {
 
     // path to get personal routes, specific for an user
     @GetMapping("/availablePersonalRoutes")
-    public List<Coordinate> getAvailableRoutesByUID(@PathVariable(value="applicationUserId") Long aui) {
+    public List<Coordinate> getAvailableRoutesByUID(@PathVariable(value = "applicationUserId") Long aui) {
         return CoordinateService.getAvailableRoutes(coordinateRepository.findAllByApplicationUserId(aui));
     }
 
@@ -124,4 +126,12 @@ public class CoordinateController {
                 coordinateRepository.findOne(coordIndex),
                 coordinateRepository.findAll());
     }
+
+    @PostMapping("/request")
+    public List<Coordinate> getRoutesWithCloseCoordinates(@RequestBody Map<String, String> coordinatesString) {
+        return CoordinateService.getSameRouteWithoutStoringObject
+                ( coordinatesString.get("startCoordinate"), coordinatesString.get("endCoordinate"), coordinateRepository.findAll());
+
+    }
+
 }

@@ -23,10 +23,23 @@ mat-horizontal-stepper{
   width: 600px;
 }
 
+/*spacer used to format content in toolbar*/
 .spacer {
   flex: 1 1 auto;
 }
 
+/*show pointer on hover of an icon*/
 mat-icon {
   cursor: pointer;
+}
+
+
+/*CSS WORKAROUND for showing animations in tabs*/
+div.mat-expansion-panel-content:not(.mat-expanded) {
+  height: 0px !important;
+  visibility: hidden !important;
+}
+
+.mat-expansion-panel-header  {
+  height: 48px;
 }

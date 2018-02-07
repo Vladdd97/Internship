@@ -11,7 +11,7 @@ export class UserService implements OnInit {
   private uid;
   private url = 'http://localhost:8080';
 
-  constructor(private http: HttpClient, private authentificationService: AuthenticationService) {
+  constructor(private http: HttpClient) {
   }
 
   ngOnInit(): void {
@@ -19,10 +19,23 @@ export class UserService implements OnInit {
 
   getAllUnexpired() {
     this.uid = JSON.parse(localStorage.getItem('currentUserID')).userID;
+    return this.http.get<Coordinate[]>(this.url + '/users/' + this.uid + '/availableAllRoutes');
+  }
+
+  getRoutesByRequest(coordinate) {
+    this.uid = JSON.parse(localStorage.getItem('currentUserID')).userID;
+    return this.http.post<Coordinate[]>(this.url + '/users/' + this.uid + '/request', {
+      startCoordinate: coordinate.coordinateStart,
+      endCoordinate: coordinate.coordinateEnd
+    });
+  }
+
+  getAllPersonalUnexpired() {
+    this.uid = JSON.parse(localStorage.getItem('currentUserID')).userID;
     return this.http.get<Coordinate[]>(this.url + '/users/' + this.uid + '/availablePersonalRoutes');
   }
 
-  getAll() {
+  getAllPersonal() {
     this.uid = JSON.parse(localStorage.getItem('currentUserID')).userID;
     return this.http.get<Coordinate[]>(this.url + '/users/' + this.uid + '/coordinates');
   }
