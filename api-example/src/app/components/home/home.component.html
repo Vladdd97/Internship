@@ -16,13 +16,13 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>Manage your directions as a {{state}}.</mat-expansion-panel-header>
         <mat-slide-toggle [checked]="toggle" (change)="showAll()">Toggle to show / hide expired</mat-slide-toggle>
-        <mat-card *ngFor="let coordinate of filterCoordinatesByState(true)" (click)="showToConosole(coordinate)">
+        <mat-card *ngFor="let coordinate of filterCoordinatesByState(true)">
           <!--(click)="setMapDirection($event, coordinate);$event.stopPropagation()">-->
           <b>From </b> {{coordinate.addressStart}}
           <p></p>
           <b> to </b> {{coordinate.addressEnd}}
           <p></p>
-          <b>Expires </b> {{calculateTime(coordinate.endTime)}}
+          <b>Expires </b> {{coordinate.endTime}}
           <mat-card-actions align="right">
             <mat-icon (click)="update($event, coordinate); $event.stopPropagation()">
               mode_edit
@@ -48,22 +48,15 @@
         </mat-expansion-panel-header>
 
         <ng-template matExpansionPanelContent>
-          <mat-card *ngFor="let coordinate of filterCoordinatesByState(false)" (click)="showToConosole(coordinate)">
+          <mat-card *ngFor="let coordinate of filterCoordinatesByState(false)" >
             <!--(click)="setMapDirection($event, coordinate);$event.stopPropagation()">-->
             <b>From </b> {{coordinate.addressStart}}
             <p></p>
             <b> to </b> {{coordinate.addressEnd}}
             <p></p>
-            <b>Expires </b> {{calculateTime(coordinate.endTime)}}
-            <mat-card-actions align="right">
-              <mat-icon (click)="update($event, coordinate); $event.stopPropagation()">
-                mode_edit
-              </mat-icon>
-              <mat-icon onclick="demo.showNotification('bottom', 'right', 'Successfully removed!')"
-                        (click)="delete($event, coordinate.id); $event.stopPropagation()">
-                delete
-              </mat-icon>
-            </mat-card-actions>
+            <b>Expires </b> {{coordinate.endTime}}
+            <p></p>
+            <b>Phone number </b> {{coordinate.phoneNumber}}
           </mat-card>
           <p *ngIf="notFoundOrEmpty">Nothing found, or missing parameters. Please provide the parameters and  try again to expand the panel</p>
         </ng-template>
@@ -74,5 +67,5 @@
     <!--</mat-card>-->
   </mat-tab-group>
   <app-map></app-map>
-  <app-stepper [state]="state"></app-stepper>
+  <app-stepper [state]="state" (triggerRequest)="sendRequestToSearch($event)"></app-stepper>
 </div>

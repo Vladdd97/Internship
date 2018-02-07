@@ -3,11 +3,13 @@
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Choose your start and end point on the map</ng-template>
       <mat-form-field>
+        <b>Start address</b>
         <input #coordinate.addressStart matInput readonly [(ngModel)]="coordinate.addressStart"
                (value)="coordinate.addressStart"
                formControlName="firstCtrl" required>
       </mat-form-field>
       <mat-form-field>
+        <b>End address</b>
         <input #coordinate.addressEnd matInput readonly [(ngModel)]="coordinate.addressEnd"
                (value)="coordinate.addressEnd"
                formControlName="firstCtrl2" required>
@@ -15,6 +17,8 @@
       <div>
         <button mat-button matStepperNext>Next</button>
       </div>
+      <p #message [hidden]="true" class="has-info">Found an existing offer / request that starts and goes the same way.
+        Open the VIEW tab to see if its still available! </p>
     </form>
   </mat-step>
   <mat-step [stepControl]="secondFormGroup">
@@ -40,7 +44,7 @@
     <div>
       <button mat-button matStepperPrevious>Back</button>
       <button mat-raised-button color="primary"
-              onclick="demo.showNotification('bottom', 'right', 'Successfully posted!')"
+              onclick="demo.showNotification('bottom', 'right', 'Successfully sent!')"
               (click)="sendRequest()">Send request
       </button>
     </div>

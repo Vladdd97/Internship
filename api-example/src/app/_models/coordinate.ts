@@ -7,4 +7,5 @@ export class Coordinate {
   startTime: string;
   endTime: string;
   forDriver: boolean;
+  phoneNumber: string;
 }

@@ -4,6 +4,7 @@ import {UserService} from '../../_services/user/user.service';
 import {AlertComponent} from '../alert/alert.component';
 import {MatDialog} from '@angular/material';
 import {StepperService} from '../../_services/stepper/stepper.service';
+import {forEach} from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-home',
@@ -64,6 +65,7 @@ export class HomeComponent implements OnInit {
       this.userService.getAllPersonalUnexpired()
         .subscribe(data => {
             this.coordinates = data;
+            this.coordinates = this.optimizeCoordinates(this.coordinates);
           }, error =>
             console.error(error)
         );
@@ -72,23 +74,52 @@ export class HomeComponent implements OnInit {
       this.userService.getAllPersonal()
         .subscribe(data => {
             this.coordinates = data;
+            this.coordinates = this.optimizeCoordinates(this.coordinates);
           }, error =>
             console.error(error)
         );
     }
-
   }
 
-  showToConsole(text) {
-    //console.log(text);
+  optimizeCoordinates(coordinates) {
+    coordinates.forEach(c => {
+      c.endTime = this.calculateTime(c.endTime);
+    });
+    return coordinates;
   }
+
+  optimizeCoordinatesRequests(coordinates) {
+    coordinates.forEach(c => {
+      c.endTime = this.calculateTime(c.endTime);
+      this.userService.getUserPhoneNumber(c.id)
+        .subscribe(data => {
+          c.phoneNumber = data;
+        }, error => {
+          console.log(error);
+        });
+    });
+    return coordinates;
+  }
+
+  // showToConsole(text) {
+  //   console.log(text);
+  // }
 
   sendRequestToSearch() {
     if ((this.coordinateSearch.coordinateStart !== undefined) && (this.coordinateSearch.coordinateStart !== undefined)) {
       this.userService.getRoutesByRequest(this.coordinateSearch)
         .subscribe(data => {
-            console.log(data);
             this.coordinatesRequests = data;
+            this.coordinatesRequests = this.optimizeCoordinatesRequests(this.coordinatesRequests);
+            this.notFoundOrEmpty = true;
+            if (data.length > 0) {
+              const temp = this.coordinatesRequests
+                .filter( coordinate => coordinate.forDriver === !(this.state === 'driver'));
+              if (temp.length > 0) {
+                this.stepperService.setExistingRoutes(true);
+              }
+              this.notFoundOrEmpty = false;
+            }
           }
           , error => {
             this.notFoundOrEmpty = true;
@@ -97,9 +128,7 @@ export class HomeComponent implements OnInit {
         );
     } else {
       this.notFoundOrEmpty = true;
-      console.log('some parameters might be missing');
     }
-
   }
 
   delete(e, id) {
@@ -143,7 +172,21 @@ export class HomeComponent implements OnInit {
       return this.coordinatesRequests
         .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
     }
-
   }
+
+  // getPhoneNumber(id) {
+  //   let response;
+  //   this.userService.getUserPhoneNumber(id)
+  //     .subscribe(data => {
+  //       console.log(data);
+  //       response = data;
+  //     }, error => {
+  //       console.log(error);
+  //     });
+  //   if (response) {
+  //     return response;
+  //   }
+  //   return '';
+  // }
 
 }

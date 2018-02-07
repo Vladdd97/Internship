@@ -25,6 +25,17 @@ public class ApplicationUser {
     @Size(min = 8, max = 255)
     private String password;
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    @NotBlank
+    private String phone;
+
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "applicationUser")
     private List<Coordinate> coordinates;

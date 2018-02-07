@@ -1,8 +1,5 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Component, OnInit, NgZone } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {UserService} from '../../../_services/user/user.service';
-import {StepperComponent} from '../stepper/stepper.component';
 import {StepperService} from '../../../_services/stepper/stepper.service';
 
 declare let google: any;

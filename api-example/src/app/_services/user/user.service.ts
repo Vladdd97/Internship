@@ -66,4 +66,8 @@ export class UserService implements OnInit {
     });
   }
 
+  getUserPhoneNumber(id) {
+    return this.http.post(this.url + '/users/phoneNumber', {coordinateId: id});
+  }
+
 }

@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../../_services/user/user.service';
 import {StepperService} from '../../../_services/stepper/stepper.service';
@@ -16,6 +16,10 @@ export class StepperComponent implements OnInit, OnChanges {
   @ViewChild('coordinate.addressStart') addressStart;
   @ViewChild('coordinate.addressEnd') addressEnd;
   @ViewChild('stepper') stepper;
+  @ViewChild('message') message;
+  @Output() triggerRequest = new EventEmitter<any>();
+
+  // messageShow = true;
 
   constructor(private _formBuilder: FormBuilder,
               private userService: UserService,
@@ -26,23 +30,37 @@ export class StepperComponent implements OnInit, OnChanges {
     this.stepperInit();
     this.stepperService.getCoordinatesStart()
       .subscribe(e => {
-        this.coordinate.addressStart = e.newAddress;
-        this.coordinate.coordinateStart = e.newCoordinates;
-        this.addressStart.nativeElement.value = e.newAddress;
+          this.coordinate.addressStart = e.newAddress;
+          this.coordinate.coordinateStart = e.newCoordinates;
+          this.addressStart.nativeElement.value = e.newAddress;
+          // this.messageShow.start = true;
         }, error => {
           console.log(error);
         }
       );
+
     this.stepperService.getCoordinatesEnd()
       .subscribe(e => {
           this.coordinate.addressEnd = e.newAddress;
           this.coordinate.coordinateEnd = e.newCoordinates;
           this.addressEnd.nativeElement.value = e.newAddress;
+          // this.messageShow = true;
+          this.checkIfRequestExists();
         }, error => {
           console.log(error);
         }
       );
+
   }
+
+  checkIfRequestExists = () => {
+    this.triggerRequest.next();
+    this.stepperService.getExistingRoutes()
+      .subscribe( e => {
+        this.message.nativeElement.hidden = false;
+      });
+  };
+
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['state']) {
@@ -50,6 +68,7 @@ export class StepperComponent implements OnInit, OnChanges {
   }
 
   stepperInit() {
+    this.message.nativeElement.hidden = true;
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ['', Validators.required],
       firstCtrl2: ['', Validators.required]
@@ -67,6 +86,7 @@ export class StepperComponent implements OnInit, OnChanges {
     this.userService.createCoordinate(this.coordinate)
       .subscribe(data => {
           this.clearValues();
+          this.stepperInit();
         },
         error => {
           console.error(error.status);

@@ -8,6 +8,8 @@ export class StepperService {
 
   private coordinateEnd = new Subject<any>();
 
+  private routesExist = new Subject<any>();
+
   constructor() {
   }
 
@@ -25,6 +27,14 @@ export class StepperService {
 
   getCoordinatesEnd() {
     return this.coordinateEnd.asObservable();
+  }
+
+  setExistingRoutes(value) {
+    this.routesExist.next(value);
+  }
+
+  getExistingRoutes() {
+    return this.routesExist.asObservable();
   }
 
 }
