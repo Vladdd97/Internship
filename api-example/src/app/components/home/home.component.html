@@ -1,4 +1,5 @@
 <div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
   <mat-toolbar color="primary">
     Welcome {{user}}!
     <div class="spacer"></div>
@@ -7,11 +8,10 @@
     <a class="btn btn-default" (click)="switch()"> Switch</a>
     <a [routerLink]="['/login']" class="btn btn-primary">Logout</a>
   </mat-toolbar>
+  </div>
 </div>
-
 <br>
-
-<div class="row">
+  <div class="row">
   <div class="col-xs-12 col-sm-5 col-md-6 col-lg-6">
     <app-stepper [state]="state" (triggerRequest)="sendRequestToSearch($event)"></app-stepper>
     <br>
@@ -71,15 +71,14 @@
             <p *ngIf="notFoundOrEmpty">Nothing found, or missing parameters. Please provide the parameters and try again
               to expand the panel</p>
           </ng-template>
-
-
         </mat-expansion-panel>
       </mat-tab>
       <!--</mat-card>-->
     </mat-tab-group>
   </div>
 
-  <div class="col-xs-12 col-sm-7 col-md-6 col-lg-6">
-    <app-map></app-map>
-  </div>
+    <div id="myMap" class="col-xs-12 col-sm-7 col-md-6 col-lg-6">
+      <app-map ></app-map>
+    </div>
+
 </div>
