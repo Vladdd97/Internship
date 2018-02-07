@@ -2,26 +2,33 @@
 
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
-.external-card {
-  width: 600px;
-}
+/*.external-card {*/
+  /*width: 600px;*/
+/*}*/
 
 #map {
-  height: 300px;
-  width: 600px;
+  height: 500px;
+}
+/*mat-toolbar{*/
+  /*max-height: 500px;*/
+/*}*/
+
+#paPricolu{
+  overflow-y: scroll;
+  max-height: 200px;
 }
 
 mat-toolbar{
   position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 2;
+  /*top: 0;*/
+  /*left: 0;*/
+  /*z-index: 2;*/
   width: 100%
 }
 
-mat-horizontal-stepper{
-  width: 600px;
-}
+/*mat-horizontal-stepper{*/
+  /*width: 600px;*/
+/*}*/
 
 /*spacer used to format content in toolbar*/
 .spacer {

@@ -1,4 +1,4 @@
-<div class="col-md-8 col-md-offset-3">
+<div class="row">
   <mat-toolbar color="primary">
     Welcome {{user}}!
     <div class="spacer"></div>
@@ -7,65 +7,79 @@
     <a class="btn btn-default" (click)="switch()"> Switch</a>
     <a [routerLink]="['/login']" class="btn btn-primary">Logout</a>
   </mat-toolbar>
-  <mat-tab-group class="external-card" #tabGroup>
-    <!--<mat-card class="external-card">-->
-    <mat-tab>
-      <ng-template mat-tab-label>
-        Manage
-      </ng-template>
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>Manage your directions as a {{state}}.</mat-expansion-panel-header>
-        <mat-slide-toggle [checked]="toggle" (change)="showAll()">Toggle to show / hide expired</mat-slide-toggle>
-        <mat-card *ngFor="let coordinate of filterCoordinatesByState(true)">
-          <!--(click)="setMapDirection($event, coordinate);$event.stopPropagation()">-->
-          <b>From </b> {{coordinate.addressStart}}
-          <p></p>
-          <b> to </b> {{coordinate.addressEnd}}
-          <p></p>
-          <b>Expires </b> {{coordinate.endTime}}
-          <mat-card-actions align="right">
-            <mat-icon (click)="update($event, coordinate); $event.stopPropagation()">
-              mode_edit
-            </mat-icon>
-            <mat-icon onclick="demo.showNotification('bottom', 'right', 'Successfully removed!')"
-                      (click)="delete($event, coordinate.id); $event.stopPropagation()">
-              delete
-            </mat-icon>
-          </mat-card-actions>
-        </mat-card>
-      </mat-expansion-panel>
-    </mat-tab>
+</div>
 
-    <mat-tab>
-      <ng-template mat-tab-label>
-        View
-      </ng-template>
-      <mat-expansion-panel (opened)="sendRequestToSearch()" #expansionSearch>
-        <mat-expansion-panel-header>
-          <mat-panel-title> Look for {{offReq}}</mat-panel-title>
-          <mat-panel-description>Please mark a start and an end point on the map
-          </mat-panel-description>
-        </mat-expansion-panel-header>
+<br>
 
-        <ng-template matExpansionPanelContent>
-          <mat-card *ngFor="let coordinate of filterCoordinatesByState(false)" >
-            <!--(click)="setMapDirection($event, coordinate);$event.stopPropagation()">-->
-            <b>From </b> {{coordinate.addressStart}}
-            <p></p>
-            <b> to </b> {{coordinate.addressEnd}}
-            <p></p>
-            <b>Expires </b> {{coordinate.endTime}}
-            <p></p>
-            <b>Phone number </b> {{coordinate.phoneNumber}}
-          </mat-card>
-          <p *ngIf="notFoundOrEmpty">Nothing found, or missing parameters. Please provide the parameters and  try again to expand the panel</p>
+<div class="row">
+  <div class="col-xs-12 col-sm-5 col-md-6 col-lg-6">
+    <app-stepper [state]="state" (triggerRequest)="sendRequestToSearch($event)"></app-stepper>
+    <br>
+    <mat-tab-group class="external-card" #tabGroup>
+      <mat-tab>
+
+        <ng-template mat-tab-label>
+          Manage
         </ng-template>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>Manage your directions as a {{state}}.</mat-expansion-panel-header>
+          <mat-slide-toggle [checked]="toggle" (change)="showAll()">Toggle to show / hide expired</mat-slide-toggle>
+          <div id="paPricolu">
+            <mat-card *ngFor="let coordinate of filterCoordinatesByState(true)">
+              <!--(click)="setMapDirection($event, coordinate);$event.stopPropagation()">-->
+              <b>From </b> {{coordinate.addressStart}}
+              <p></p>
+              <b> to </b> {{coordinate.addressEnd}}
+              <p></p>
+              <b>Expires </b> {{coordinate.endTime}}
+              <mat-card-actions align="right">
+                <mat-icon (click)="update($event, coordinate); $event.stopPropagation()">
+                  mode_edit
+                </mat-icon>
+                <mat-icon onclick="demo.showNotification('bottom', 'right', 'Successfully removed!')"
+                          (click)="delete($event, coordinate.id); $event.stopPropagation()">
+                  delete
+                </mat-icon>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </mat-expansion-panel>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          View
+        </ng-template>
+        <mat-expansion-panel (opened)="sendRequestToSearch()" #expansionSearch>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Look for {{offReq}}</mat-panel-title>
+            <mat-panel-description>Please mark a start and an end point on the map
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <ng-template matExpansionPanelContent>
+            <mat-card *ngFor="let coordinate of filterCoordinatesByState(false)">
+              <!--(click)="setMapDirection($event, coordinate);$event.stopPropagation()">-->
+              <b>From </b> {{coordinate.addressStart}}
+              <p></p>
+              <b> to </b> {{coordinate.addressEnd}}
+              <p></p>
+              <b>Expires </b> {{coordinate.endTime}}
+              <p></p>
+              <b>Phone number </b> {{coordinate.phoneNumber}}
+            </mat-card>
+            <p *ngIf="notFoundOrEmpty">Nothing found, or missing parameters. Please provide the parameters and try again
+              to expand the panel</p>
+          </ng-template>
 
 
-      </mat-expansion-panel>
-    </mat-tab>
-    <!--</mat-card>-->
-  </mat-tab-group>
-  <app-map></app-map>
-  <app-stepper [state]="state" (triggerRequest)="sendRequestToSearch($event)"></app-stepper>
+        </mat-expansion-panel>
+      </mat-tab>
+      <!--</mat-card>-->
+    </mat-tab-group>
+  </div>
+
+  <div class="col-xs-12 col-sm-7 col-md-6 col-lg-6">
+    <app-map></app-map>
+  </div>
 </div>
