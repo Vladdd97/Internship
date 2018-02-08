@@ -17,11 +17,14 @@
       <div>
         <button mat-button matStepperNext>Next</button>
       </div>
-
-      <div class="alert alert-success fade-in" #message [hidden]="true">
-        <a href="#" class="close" data-dismiss="alert" (click)="removeAlert()">&times;</a>
-        Found an existing offer / request that starts and goes the same way.
-        Open the <strong>VIEW</strong> tab to see if its still available!
+      <div class="alert alert-success fade-in" #messageSuccess [hidden]="true">
+        <!--<a class="close" data-dismiss="alert" (click)="removeAlerts()">&times;</a>-->
+        Found an existing offer/request that starts and goes the same way.
+        Open the <strong>View available requests similar to yours</strong> tab to see if its still available!
+      </div>
+      <div class="alert alert-danger fade-in" #messageDanger [hidden]="true">
+        <!--<a class="close" data-dismiss="alert" (click)="removeAlerts()">&times;</a>-->
+        No existing requests/offers that start and go the same way. Please continue the wizard!
       </div>
     </form>
   </mat-step>
@@ -44,7 +47,7 @@
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Done</ng-template>
-    Whenever you are ready, send out your request!
+    <b>Whenever you are ready, send out your request!</b>
     <div>
       <button mat-button matStepperPrevious>Back</button>
       <button mat-raised-button color="primary"

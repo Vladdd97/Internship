@@ -16,7 +16,8 @@ export class StepperComponent implements OnInit, OnChanges {
   @ViewChild('coordinate.addressStart') addressStart;
   @ViewChild('coordinate.addressEnd') addressEnd;
   @ViewChild('stepper') stepper;
-  @ViewChild('message') message;
+  @ViewChild('messageSuccess') messageSuccess;
+  @ViewChild('messageDanger') messageDanger;
   @Output() triggerRequest = new EventEmitter<any>();
 
   constructor(private _formBuilder: FormBuilder,
@@ -25,13 +26,19 @@ export class StepperComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+
     this.stepperInit();
+
+    this.subscribeToCoordinatesFromMap();
+
+  }
+
+  subscribeToCoordinatesFromMap() {
     this.stepperService.getCoordinatesStart()
       .subscribe(e => {
           this.coordinate.addressStart = e.newAddress;
           this.coordinate.coordinateStart = e.newCoordinates;
           this.addressStart.nativeElement.value = e.newAddress;
-          // this.messageShow.start = true;
         }, error => {
           console.log(error);
         }
@@ -53,10 +60,16 @@ export class StepperComponent implements OnInit, OnChanges {
   checkIfRequestExists = () => {
     this.triggerRequest.next();
     this.stepperService.getExistingRoutes()
-      .subscribe( () => {
-        this.message.nativeElement.hidden = false;
+      .subscribe((response) => {
+        if (response) {
+          this.messageDanger.nativeElement.hidden = true;
+          this.messageSuccess.nativeElement.hidden = false;
+        } else {
+          this.messageSuccess.nativeElement.hidden = true;
+          this.messageDanger.nativeElement.hidden = false;
+        }
       });
-  }
+  }// ;
 
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -65,7 +78,8 @@ export class StepperComponent implements OnInit, OnChanges {
   }
 
   stepperInit() {
-    this.message.nativeElement.hidden = true;
+    this.removeAlerts();
+    this.clearValues();
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ['', Validators.required],
       firstCtrl2: ['', Validators.required]
@@ -81,11 +95,10 @@ export class StepperComponent implements OnInit, OnChanges {
     this.coordinate.forDriver = this.state === 'driver';
     this.userService.createCoordinate(this.coordinate)
       .subscribe(() => {
-          this.clearValues();
-          this.stepperInit();
-        }, error => {
-          console.error(error.status);
-        });
+        this.stepperInit();
+      }, error => {
+        console.error(error.status);
+      });
   }
 
   clearValues() {
@@ -95,7 +108,9 @@ export class StepperComponent implements OnInit, OnChanges {
     this.addressStart.nativeElement.value = '';
   }
 
-  removeAlert() {
-    this.message.nativeElement.hidden = true;
+
+  removeAlerts() {
+    this.messageSuccess.nativeElement.hidden = true;
+    this.messageDanger.nativeElement.hidden = true;
   }
 }

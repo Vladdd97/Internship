@@ -4,6 +4,7 @@ import {UserService} from '../../_services/user/user.service';
 import {AlertComponent} from '../alert/alert.component';
 import {MatDialog} from '@angular/material';
 import {StepperService} from '../../_services/stepper/stepper.service';
+import {MapsComponent} from './maps/maps.component';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +28,8 @@ export class HomeComponent implements OnInit {
 
   constructor(private userService: UserService,
               public dialog: MatDialog,
-              private stepperService: StepperService) {
+              private stepperService: StepperService,
+              private map: MapsComponent) {
     this.i = 0;
     this.state = this.states[this.i];
     this.offReq = this.statesOffReq[this.i];
@@ -128,14 +130,18 @@ export class HomeComponent implements OnInit {
         .subscribe(data => {
             this.coordinatesRequests = data;
             this.coordinatesRequests = this.optimizeCoordinatesRequests(this.coordinatesRequests);
-            this.notFoundOrEmpty = true;
             if (data.length > 0) {
               const temp = this.coordinatesRequests
                 .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
               if (temp.length > 0) {
                 this.stepperService.setExistingRoutes(true);
+                this.notFoundOrEmpty = false;
+              } else {
+                this.stepperService.setExistingRoutes(false);
               }
-              this.notFoundOrEmpty = false;
+            } else {
+              this.stepperService.setExistingRoutes(false);
+              this.notFoundOrEmpty = true;
             }
           }, error => {
             this.notFoundOrEmpty = true;
@@ -203,14 +209,26 @@ export class HomeComponent implements OnInit {
       return this.coordinates
         .filter(coordinate => coordinate.forDriver === (this.state === 'driver'));
     } else {
-      if (this.toggle2) {
-        return this.coordinatesRequests
-          .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
-      } else {
-        return this.coordinatesAllRequests
-          .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
-      }
+      return this.coordinatesRequests
+        .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
     }
+    // if (this.toggle2) {
+    //   return this.coordinatesRequests
+    //     .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
+    // } else {
+    //   return this.coordinatesAllRequests
+    //     .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
+    // }
+
+  }
+
+  returnAllExistingRoutes() {
+    return this.coordinatesAllRequests
+      .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
+  }
+
+  setMapDirection(start, end) {
+    this.map.setMapDirection(end.split(':'), start.split(':'));
   }
 
 }

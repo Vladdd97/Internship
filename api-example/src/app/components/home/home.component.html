@@ -1,30 +1,36 @@
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-  <mat-toolbar color="primary">
-    Welcome {{user}}!
-    <div class="spacer"></div>
-    Today you're a {{states[i]}}
-    <div class="spacer"></div>
-    <a class="btn btn-default" (click)="switch()"> Switch</a>
-    <a [routerLink]="['/login']" class="btn btn-primary">Logout</a>
-  </mat-toolbar>
+    <mat-toolbar color="primary">
+      Welcome {{user}}!
+      <div class="spacer"></div>
+      Today you're a {{states[i]}}
+      <div class="spacer"></div>
+      <a class="btn btn-default" (click)="switch()"> Switch</a>
+      <a [routerLink]="['/login']" class="btn btn-primary">Logout</a>
+    </mat-toolbar>
   </div>
 </div>
 <br>
-  <div class="row">
+
+<div class="row">
   <div class="col-xs-12 col-sm-5 col-md-6 col-lg-6">
+    <!------------------------------ STEPPER ------------------------------>
     <app-stepper [state]="state" (triggerRequest)="sendRequestToSearch($event)"></app-stepper>
-    <br>
+    <!------------------------------ TABS ------------------------------>
     <mat-tab-group class="external-card" #tabGroup>
+      <!--FIRST TAB-->
       <mat-tab>
         <ng-template mat-tab-label>
-          Manage
+          <mat-icon aria-hidden="true">person_pin</mat-icon>
+          Manage personal routes
         </ng-template>
         <mat-expansion-panel>
           <mat-expansion-panel-header>Manage your directions as a {{state}}.</mat-expansion-panel-header>
-          <mat-slide-toggle color="primary" [checked]="toggle" (change)="showAll()">Toggle to show / hide expired</mat-slide-toggle>
-          <div id="coordinates-container-scroll">
-            <mat-card *ngFor="let coordinate of filterCoordinatesByState(true)">
+          <mat-slide-toggle color="primary" [checked]="toggle" (change)="showAll()">Toggle to show / hide expired
+          </mat-slide-toggle>
+          <div class="coordinates-container-scroll">
+            <mat-card *ngFor="let coordinate of filterCoordinatesByState(true)"
+                      (click)="setMapDirection(coordinate.coordinateStart, coordinate.coordinateEnd)">
               <b>From </b> {{coordinate.addressStart}}
               <p></p>
               <b> to </b> {{coordinate.addressEnd}}
@@ -43,19 +49,48 @@
           </div>
         </mat-expansion-panel>
       </mat-tab>
+      <!--SECOND TAB-->
       <mat-tab>
         <ng-template mat-tab-label>
-          View available {{offReq}}
+          <mat-icon aria-hidden="true">transfer_within_a_station</mat-icon>
+          View all available {{offReq}}
         </ng-template>
         <mat-expansion-panel (opened)="sendRequestToSearch()" #expansionSearch>
           <mat-expansion-panel-header>
             <mat-panel-title> Look for {{offReq}}</mat-panel-title>
-            <mat-panel-description>Please mark a start and an end point on the map
+            <mat-panel-description>You will see ALL available requests
             </mat-panel-description>
           </mat-expansion-panel-header>
-          <mat-slide-toggle [checked]="toggle2" color="primary" (change)="getAllAvailableReq()">Toggle to hide / show all existing {{offReq}}</mat-slide-toggle>
-          <div id="coordinates-container-scroll2">
-          <mat-card *ngFor="let coordinate of filterCoordinatesByState(false)" (click)="">
+          <div class="coordinates-container-scroll">
+            <mat-card *ngFor="let coordinate of returnAllExistingRoutes()"
+                      (click)="setMapDirection(coordinate.coordinateStart, coordinate.coordinateEnd)">
+              <b>From </b> {{coordinate.addressStart}}
+              <p></p>
+              <b> to </b> {{coordinate.addressEnd}}
+              <p></p>
+              <b>Expires </b> {{coordinate.endTime}}
+              <p></p>
+              <b>Phone number </b> {{coordinate.phoneNumber}}
+            </mat-card>
+          </div>
+        </mat-expansion-panel>
+      </mat-tab>
+      <!--THIRD TAB-->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon aria-hidden="true">near_me</mat-icon>
+          View available {{offReq}} similar to yours
+        </ng-template>
+        <mat-expansion-panel (opened)="sendRequestToSearch()" #expansionSearch>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Look for {{offReq}}</mat-panel-title>
+            <mat-panel-description>If something exists of course
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!--<mat-slide-toggle [checked]="toggle2" color="primary" (change)="getAllAvailableReq()">Toggle to hide / show all existing {{offReq}}</mat-slide-toggle>-->
+          <div class="coordinates-container-scroll">
+            <mat-card *ngFor="let coordinate of filterCoordinatesByState(false)"
+                      (click)="setMapDirection(coordinate.coordinateStart, coordinate.coordinateEnd)">
               <b>From </b> {{coordinate.addressStart}}
               <p></p>
               <b> to </b> {{coordinate.addressEnd}}
@@ -69,8 +104,9 @@
       </mat-tab>
     </mat-tab-group>
   </div>
-    <div id="myMap" class="col-xs-12 col-sm-7 col-md-6 col-lg-6">
-      <app-map ></app-map>
-    </div>
+  <div id="myMap" class="col-xs-12 col-sm-7 col-md-6 col-lg-6">
+    <!------------------------------ MAP ------------------------------>
+    <app-map></app-map>
+  </div>
 
 </div>

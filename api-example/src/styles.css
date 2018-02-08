@@ -2,18 +2,17 @@
 
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
-/*.external-card {*/
-  /*width: 600px;*/
-/*}*/
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
 #map {
-  height: 630px;
+  height: 600px;
 }
-/*mat-toolbar{*/
-  /*max-height: 500px;*/
-/*}*/
 
-#coordinates-container-scroll{
+div.coordinates-container-scroll{
   overflow-y: scroll;
   max-height: 250px;
 }

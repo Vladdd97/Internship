@@ -1,4 +1,4 @@
-import {Component, OnInit, NgZone } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {StepperService} from '../../../_services/stepper/stepper.service';
 
@@ -35,12 +35,13 @@ export class MapsComponent implements OnInit {
     return this.map;
   }
 
-  setMapDirection(startPoint, endPoint, map) {
-
+  setMapDirection(startPoint, endPoint) {
     this.directionsService = new google.maps.DirectionsService;
     this.directionsDisplay = new google.maps.DirectionsRenderer;
-    this.directionsDisplay.setMap(map);
-    calculateAndDisplayRoute(this.directionsService, this.directionsDisplay);
+    this.directionsDisplay.setMap(this.mapInit());
+    if ( startPoint !== null && endPoint !== null) {
+      calculateAndDisplayRoute(this.directionsService, this.directionsDisplay);
+    }
 
     function calculateAndDisplayRoute(directionsService, directionsDisplay) {
       directionsService.route({
@@ -77,20 +78,21 @@ export class MapsComponent implements OnInit {
     if (this.markers.length > 1) {
       this.setMapDirection(
         [this.markers[0].getPosition().lng(), this.markers[0].getPosition().lat()],
-        [this.markers[1].getPosition().lng(), this.markers[1].getPosition().lat()], this.mapInit());
+        [this.markers[1].getPosition().lng(), this.markers[1].getPosition().lat()],
+        // this.mapInit());
+      );
       this.clearMarkers();
     }
+  }
+
+  clear() {
+    this.setMapDirection(null, null);
   }
 
   addAllMarkersOnMap(map) {
     for (const m of this.markers) {
       m.setMap(map);
     }
-  }
-
-  clearMarkers() {
-    this.addAllMarkersOnMap(null);
-    this.markers = [];
   }
 
   geocodePosition(marker) {
@@ -109,5 +111,10 @@ export class MapsComponent implements OnInit {
         }
       });
     });
+  }
+
+  clearMarkers() {
+    this.addAllMarkersOnMap(null);
+    this.markers = [];
   }
 }
