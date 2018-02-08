@@ -17,8 +17,12 @@
       <div>
         <button mat-button matStepperNext>Next</button>
       </div>
-      <p #message [hidden]="true" class="has-info">Found an existing offer / request that starts and goes the same way.
-        Open the VIEW tab to see if its still available! </p>
+
+      <div class="alert alert-success fade-in" #message [hidden]="true">
+        <a href="#" class="close" data-dismiss="alert" (click)="removeAlert()">&times;</a>
+        Found an existing offer / request that starts and goes the same way.
+        Open the <strong>VIEW</strong> tab to see if its still available!
+      </div>
     </form>
   </mat-step>
   <mat-step [stepControl]="secondFormGroup">

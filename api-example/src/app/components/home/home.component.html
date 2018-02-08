@@ -17,21 +17,19 @@
     <br>
     <mat-tab-group class="external-card" #tabGroup>
       <mat-tab>
-
         <ng-template mat-tab-label>
           Manage
         </ng-template>
         <mat-expansion-panel>
           <mat-expansion-panel-header>Manage your directions as a {{state}}.</mat-expansion-panel-header>
-          <mat-slide-toggle [checked]="toggle" (change)="showAll()">Toggle to show / hide expired</mat-slide-toggle>
-          <div id="paPricolu">
+          <mat-slide-toggle color="primary" [checked]="toggle" (change)="showAll()">Toggle to show / hide expired</mat-slide-toggle>
+          <div id="coordinates-container-scroll">
             <mat-card *ngFor="let coordinate of filterCoordinatesByState(true)">
-              <!--(click)="setMapDirection($event, coordinate);$event.stopPropagation()">-->
               <b>From </b> {{coordinate.addressStart}}
               <p></p>
               <b> to </b> {{coordinate.addressEnd}}
               <p></p>
-              <b>Expires </b> {{coordinate.endTime}}
+              <b>Expire time </b> {{coordinate.endTime}}
               <mat-card-actions align="right">
                 <mat-icon (click)="update($event, coordinate); $event.stopPropagation()">
                   mode_edit
@@ -45,10 +43,9 @@
           </div>
         </mat-expansion-panel>
       </mat-tab>
-
       <mat-tab>
         <ng-template mat-tab-label>
-          View
+          View available {{offReq}}
         </ng-template>
         <mat-expansion-panel (opened)="sendRequestToSearch()" #expansionSearch>
           <mat-expansion-panel-header>
@@ -56,10 +53,9 @@
             <mat-panel-description>Please mark a start and an end point on the map
             </mat-panel-description>
           </mat-expansion-panel-header>
-
-          <ng-template matExpansionPanelContent>
-            <mat-card *ngFor="let coordinate of filterCoordinatesByState(false)">
-              <!--(click)="setMapDirection($event, coordinate);$event.stopPropagation()">-->
+          <mat-slide-toggle [checked]="toggle2" color="primary" (change)="getAllAvailableReq()">Toggle to hide / show all existing {{offReq}}</mat-slide-toggle>
+          <div id="coordinates-container-scroll2">
+          <mat-card *ngFor="let coordinate of filterCoordinatesByState(false)" (click)="">
               <b>From </b> {{coordinate.addressStart}}
               <p></p>
               <b> to </b> {{coordinate.addressEnd}}
@@ -68,15 +64,11 @@
               <p></p>
               <b>Phone number </b> {{coordinate.phoneNumber}}
             </mat-card>
-            <p *ngIf="notFoundOrEmpty">Nothing found, or missing parameters. Please provide the parameters and try again
-              to expand the panel</p>
-          </ng-template>
+          </div>
         </mat-expansion-panel>
       </mat-tab>
-      <!--</mat-card>-->
     </mat-tab-group>
   </div>
-
     <div id="myMap" class="col-xs-12 col-sm-7 col-md-6 col-lg-6">
       <app-map ></app-map>
     </div>

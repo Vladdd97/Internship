@@ -19,8 +19,6 @@ export class StepperComponent implements OnInit, OnChanges {
   @ViewChild('message') message;
   @Output() triggerRequest = new EventEmitter<any>();
 
-  // messageShow = true;
-
   constructor(private _formBuilder: FormBuilder,
               private userService: UserService,
               private stepperService: StepperService) {
@@ -44,7 +42,6 @@ export class StepperComponent implements OnInit, OnChanges {
           this.coordinate.addressEnd = e.newAddress;
           this.coordinate.coordinateEnd = e.newCoordinates;
           this.addressEnd.nativeElement.value = e.newAddress;
-          // this.messageShow = true;
           this.checkIfRequestExists();
         }, error => {
           console.log(error);
@@ -56,10 +53,10 @@ export class StepperComponent implements OnInit, OnChanges {
   checkIfRequestExists = () => {
     this.triggerRequest.next();
     this.stepperService.getExistingRoutes()
-      .subscribe( e => {
+      .subscribe( () => {
         this.message.nativeElement.hidden = false;
       });
-  };
+  }
 
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -82,13 +79,11 @@ export class StepperComponent implements OnInit, OnChanges {
     this.coordinate.startTime = new Date().getTime();
     this.coordinate.endTime = this.coordinate.startTime + this.coordinate.lifeTime * 60 * 1000;
     this.coordinate.forDriver = this.state === 'driver';
-    console.log(this.coordinate);
     this.userService.createCoordinate(this.coordinate)
-      .subscribe(data => {
+      .subscribe(() => {
           this.clearValues();
           this.stepperInit();
-        },
-        error => {
+        }, error => {
           console.error(error.status);
         });
   }
@@ -100,5 +95,7 @@ export class StepperComponent implements OnInit, OnChanges {
     this.addressStart.nativeElement.value = '';
   }
 
-
+  removeAlert() {
+    this.message.nativeElement.hidden = true;
+  }
 }

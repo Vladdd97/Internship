@@ -1,6 +1,5 @@
 import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {AuthenticationService} from '../authentification/authentication.service';
 import {Coordinate} from '../../_models/coordinate';
 
 import 'rxjs/add/operator/map';
@@ -19,7 +18,9 @@ export class UserService implements OnInit {
 
   getAllUnexpired() {
     this.uid = JSON.parse(localStorage.getItem('currentUserID')).userID;
-    return this.http.get<Coordinate[]>(this.url + '/users/' + this.uid + '/availableAllRoutes');
+    return this.http.get<Coordinate[]>(this.url + '/users/' + this.uid + '/availableAllRoutes', {
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
   }
 
   getRoutesByRequest(coordinate) {
@@ -32,7 +33,9 @@ export class UserService implements OnInit {
 
   getAllPersonalUnexpired() {
     this.uid = JSON.parse(localStorage.getItem('currentUserID')).userID;
-    return this.http.get<Coordinate[]>(this.url + '/users/' + this.uid + '/availablePersonalRoutes');
+    return this.http.get<Coordinate[]>(this.url + '/users/' + this.uid + '/availablePersonalRoutes', {
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
   }
 
   getAllPersonal() {

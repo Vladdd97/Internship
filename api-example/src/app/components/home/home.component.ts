@@ -1,10 +1,9 @@
-import {Component, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, OnInit, Output} from '@angular/core';
 import {Coordinate} from '../../_models/coordinate';
 import {UserService} from '../../_services/user/user.service';
 import {AlertComponent} from '../alert/alert.component';
 import {MatDialog} from '@angular/material';
 import {StepperService} from '../../_services/stepper/stepper.service';
-import {forEach} from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-home',
@@ -12,14 +11,16 @@ import {forEach} from '@angular/router/src/utils/collection';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  coordinates: Coordinate[] = [];
-  coordinatesRequests: Coordinate[] = [];
+  coordinates: Coordinate[] = []; // container with all user personal requests
+  coordinatesRequests: Coordinate[] = []; // container with all requests that are going the same way
+  coordinatesAllRequests: Coordinate[] = []; // container with all unexpired requests
   private user: string;
   private states = ['passenger', 'driver'];
   private statesOffReq = ['offers', 'requests'];
   private i;
   private offReq;
   private toggle: boolean;
+  private toggle2: boolean;
   @Output() state;
   coordinateSearch: any = {};
   notFoundOrEmpty;
@@ -33,10 +34,27 @@ export class HomeComponent implements OnInit {
     this.notFoundOrEmpty = false;
   }
 
+  static calculateTime(endTime) {
+    const time = new Date(Number(endTime));
+    return time.toLocaleTimeString() + ' ' + time.toDateString();
+  }
+
   ngOnInit() {
+
     this.user = JSON.parse(localStorage.getItem('currentUsername')).username;
+
+    // populate container with all personal requests
     this.showAll();
 
+    // populate container with all non-expired requests
+    this.getAllAvailableReq();
+
+    // subscribe to stepper start address and end address fields in order to make a search in all non expired routes
+    this.subscribeToAddressNames();
+
+  }
+
+  subscribeToAddressNames() {
     this.stepperService.getCoordinatesStart()
       .subscribe(e => {
           this.coordinateSearch.coordinateStart = e.newCoordinates;
@@ -44,6 +62,7 @@ export class HomeComponent implements OnInit {
           console.log(error);
         }
       );
+
     this.stepperService.getCoordinatesEnd()
       .subscribe(e => {
           this.coordinateSearch.coordinateEnd = e.newCoordinates;
@@ -83,14 +102,16 @@ export class HomeComponent implements OnInit {
 
   optimizeCoordinates(coordinates) {
     coordinates.forEach(c => {
-      c.endTime = this.calculateTime(c.endTime);
+      c.endTime = HomeComponent.calculateTime(c.endTime);
+    }, error => {
+      console.log(error);
     });
     return coordinates;
   }
 
   optimizeCoordinatesRequests(coordinates) {
     coordinates.forEach(c => {
-      c.endTime = this.calculateTime(c.endTime);
+      c.endTime = HomeComponent.calculateTime(c.endTime);
       this.userService.getUserPhoneNumber(c.id)
         .subscribe(data => {
           c.phoneNumber = data;
@@ -101,10 +122,6 @@ export class HomeComponent implements OnInit {
     return coordinates;
   }
 
-  // showToConsole(text) {
-  //   console.log(text);
-  // }
-
   sendRequestToSearch() {
     if ((this.coordinateSearch.coordinateStart !== undefined) && (this.coordinateSearch.coordinateStart !== undefined)) {
       this.userService.getRoutesByRequest(this.coordinateSearch)
@@ -114,14 +131,13 @@ export class HomeComponent implements OnInit {
             this.notFoundOrEmpty = true;
             if (data.length > 0) {
               const temp = this.coordinatesRequests
-                .filter( coordinate => coordinate.forDriver === !(this.state === 'driver'));
+                .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
               if (temp.length > 0) {
                 this.stepperService.setExistingRoutes(true);
               }
               this.notFoundOrEmpty = false;
             }
-          }
-          , error => {
+          }, error => {
             this.notFoundOrEmpty = true;
             console.log(error);
           }
@@ -131,9 +147,31 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  getAllAvailableReq() {
+    if (!this.toggle2) {
+      this.toggle2 = !this.toggle2;
+      this.userService.getAllUnexpired()
+        .subscribe(data => {
+          this.coordinatesAllRequests = data;
+          this.coordinatesAllRequests = this.optimizeCoordinatesRequests(this.coordinatesAllRequests);
+        }, error => {
+          console.log(error);
+        });
+    } else {
+      this.toggle2 = !this.toggle2;
+      this.userService.getAllUnexpired()
+        .subscribe(data => {
+          this.coordinatesAllRequests = data;
+          this.coordinatesAllRequests = this.optimizeCoordinatesRequests(this.coordinatesAllRequests);
+        }, error => {
+          console.log(error);
+        });
+    }
+  }
+
   delete(e, id) {
     this.userService.delete(id)
-      .subscribe(data => {
+      .subscribe(() => {
           this.showAll();
         }, error =>
           console.error(error)
@@ -152,41 +190,27 @@ export class HomeComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.userService.update(result.data.id, result.data)
-        .subscribe(dat =>
+        .subscribe(() =>
             this.showAll(),
           error =>
             console.log(error));
     });
   }
 
-  calculateTime(endTime) {
-    const time = new Date(Number(endTime));
-    return time.toTimeString();
-  }
 
   filterCoordinatesByState(stateFilter) {
     if (stateFilter) {
       return this.coordinates
         .filter(coordinate => coordinate.forDriver === (this.state === 'driver'));
     } else {
-      return this.coordinatesRequests
-        .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
+      if (this.toggle2) {
+        return this.coordinatesRequests
+          .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
+      } else {
+        return this.coordinatesAllRequests
+          .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
+      }
     }
   }
-
-  // getPhoneNumber(id) {
-  //   let response;
-  //   this.userService.getUserPhoneNumber(id)
-  //     .subscribe(data => {
-  //       console.log(data);
-  //       response = data;
-  //     }, error => {
-  //       console.log(error);
-  //     });
-  //   if (response) {
-  //     return response;
-  //   }
-  //   return '';
-  // }
 
 }
