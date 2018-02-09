@@ -35,6 +35,7 @@ export class MapsComponent implements OnInit {
     return this.map;
   }
 
+  // method that draws a route between a start point and end point
   setMapDirection(startPoint, endPoint) {
     this.directionsService = new google.maps.DirectionsService;
     this.directionsDisplay = new google.maps.DirectionsRenderer;
@@ -42,7 +43,6 @@ export class MapsComponent implements OnInit {
     if ( startPoint !== null && endPoint !== null) {
       calculateAndDisplayRoute(this.directionsService, this.directionsDisplay);
     }
-
     function calculateAndDisplayRoute(directionsService, directionsDisplay) {
       directionsService.route({
         origin: new google.maps.LatLng(parseFloat(startPoint[1]), parseFloat(startPoint[0])),
@@ -85,7 +85,7 @@ export class MapsComponent implements OnInit {
     }
   }
 
-  clear() {
+  clearDirections() {
     this.setMapDirection(null, null);
   }
 

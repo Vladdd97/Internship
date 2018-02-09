@@ -2,26 +2,19 @@
 
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
 #map {
   height: 600px;
 }
 
 div.coordinates-container-scroll{
   overflow-y: scroll;
-  max-height: 250px;
+  max-height: 300px;
 }
 
-#coordinates-container-scroll2{
-  overflow-y: scroll;
-  max-height: 250px;
+::-webkit-scrollbar {
+  width: 0;  /* remove scrollbar space */
+  background: transparent;  /* optional: just make scrollbar invisible */
 }
-
 mat-toolbar{
   width: 100%
 }
@@ -39,7 +32,7 @@ mat-icon {
 
 /*CSS WORKAROUND for showing animations in tabs*/
 div.mat-expansion-panel-content:not(.mat-expanded) {
-  height: 0px !important;
+  height: 0 !important;
   visibility: hidden !important;
 }
 

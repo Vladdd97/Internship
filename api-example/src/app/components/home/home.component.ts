@@ -15,13 +15,12 @@ export class HomeComponent implements OnInit {
   coordinates: Coordinate[] = []; // container with all user personal requests
   coordinatesRequests: Coordinate[] = []; // container with all requests that are going the same way
   coordinatesAllRequests: Coordinate[] = []; // container with all unexpired requests
-  private user: string;
-  private states = ['passenger', 'driver'];
-  private statesOffReq = ['offers', 'requests'];
+  private user: string; // will stock username
+  private states = ['passenger', 'driver']; // user states
+  private statesOffReq = ['offers', 'requests']; // offers or requests states
   private i;
   private offReq;
   private toggle: boolean;
-  private toggle2: boolean;
   @Output() state;
   coordinateSearch: any = {};
   notFoundOrEmpty;
@@ -154,25 +153,13 @@ export class HomeComponent implements OnInit {
   }
 
   getAllAvailableReq() {
-    if (!this.toggle2) {
-      this.toggle2 = !this.toggle2;
-      this.userService.getAllUnexpired()
-        .subscribe(data => {
-          this.coordinatesAllRequests = data;
-          this.coordinatesAllRequests = this.optimizeCoordinatesRequests(this.coordinatesAllRequests);
-        }, error => {
-          console.log(error);
-        });
-    } else {
-      this.toggle2 = !this.toggle2;
-      this.userService.getAllUnexpired()
-        .subscribe(data => {
-          this.coordinatesAllRequests = data;
-          this.coordinatesAllRequests = this.optimizeCoordinatesRequests(this.coordinatesAllRequests);
-        }, error => {
-          console.log(error);
-        });
-    }
+    this.userService.getAllUnexpired()
+      .subscribe(data => {
+        this.coordinatesAllRequests = data;
+        this.coordinatesAllRequests = this.optimizeCoordinatesRequests(this.coordinatesAllRequests);
+      }, error => {
+        console.log(error);
+      });
   }
 
   delete(e, id) {
@@ -212,14 +199,6 @@ export class HomeComponent implements OnInit {
       return this.coordinatesRequests
         .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
     }
-    // if (this.toggle2) {
-    //   return this.coordinatesRequests
-    //     .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
-    // } else {
-    //   return this.coordinatesAllRequests
-    //     .filter(coordinate => coordinate.forDriver === !(this.state === 'driver'));
-    // }
-
   }
 
   returnAllExistingRoutes() {

@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../../_services/user/user.service';
 import {StepperService} from '../../../_services/stepper/stepper.service';
+import {MapsComponent} from '../maps/maps.component';
 
 @Component({
   selector: 'app-stepper',
@@ -22,7 +23,8 @@ export class StepperComponent implements OnInit, OnChanges {
 
   constructor(private _formBuilder: FormBuilder,
               private userService: UserService,
-              private stepperService: StepperService) {
+              private stepperService: StepperService,
+              private map: MapsComponent) {
   }
 
   ngOnInit() {
@@ -96,6 +98,7 @@ export class StepperComponent implements OnInit, OnChanges {
     this.userService.createCoordinate(this.coordinate)
       .subscribe(() => {
         this.stepperInit();
+        this.map.clearDirections();
       }, error => {
         console.error(error.status);
       });

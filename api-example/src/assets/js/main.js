@@ -45,7 +45,7 @@ function initMap() {
 
 function addMarker(latLng, map) {
     if (markers.length > 1) {
-        alert("clear !");
+        alert("clearDirections !");
         clearMarkers();
         setEmptyFields();
     }

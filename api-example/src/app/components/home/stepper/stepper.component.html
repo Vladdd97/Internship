@@ -2,27 +2,25 @@
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Choose your start and end point on the map</ng-template>
-      <mat-form-field>
+      <mat-form-field class="address-fields">
         <b>Start address</b>
         <input #coordinate.addressStart matInput readonly [(ngModel)]="coordinate.addressStart"
-               (value)="coordinate.addressStart"
-               formControlName="firstCtrl" required>
+               (value)="coordinate.addressStart" formControlName="firstCtrl" required>
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field class="address-fields">
         <b>End address</b>
         <input #coordinate.addressEnd matInput readonly [(ngModel)]="coordinate.addressEnd"
-               (value)="coordinate.addressEnd"
-               formControlName="firstCtrl2" required>
+               (value)="coordinate.addressEnd" formControlName="firstCtrl2" required>
       </mat-form-field>
       <div>
         <button mat-button matStepperNext>Next</button>
       </div>
-      <div class="alert alert-success fade-in" #messageSuccess [hidden]="true">
+      <div class="alert alert-danger fade-in" #messageSuccess [hidden]="true">
         <!--<a class="close" data-dismiss="alert" (click)="removeAlerts()">&times;</a>-->
         Found an existing offer/request that starts and goes the same way.
         Open the <strong>View available requests similar to yours</strong> tab to see if its still available!
       </div>
-      <div class="alert alert-danger fade-in" #messageDanger [hidden]="true">
+      <div class="alert alert-success fade-in" #messageDanger [hidden]="true">
         <!--<a class="close" data-dismiss="alert" (click)="removeAlerts()">&times;</a>-->
         No existing requests/offers that start and go the same way. Please continue the wizard!
       </div>
