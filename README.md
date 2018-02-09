@@ -85,6 +85,9 @@ The data format will look like:
                 "routeDistance" : "an example distance representation"
         }
        
-       Car Sharing service. Enjoy traveling together!
- Service that allows to drivers and passengers communicate and help to each other. Every driver can provide his car to passenger. In the same way every passenger can ask for a driver service
+
+Car Sharing service. Enjoy traveling together!
+
+Service that allows to drivers and passengers communicate and help to each other. Every driver can provide his car to passenger. In the same way every passenger can ask for a driver service.
+ 
 Made by Alex Bezu, Vlad Bantus and Vladislav Nahaba ©
